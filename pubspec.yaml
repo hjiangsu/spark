@@ -40,6 +40,9 @@ dependencies:
   bloc_concurrency: ^0.2.1
   stream_transform: ^2.1.0
   flutter_dotenv: ^5.0.2
+  pubnub: ^4.2.2
+  device_info_plus: ^8.1.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
