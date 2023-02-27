@@ -180,7 +180,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       if (event.subreddit == null) {
         subredditName = null;
       } else {
-        subredditName = posts.first.subreddit;
+        subredditName = posts.first['subreddit'];
       }
 
       return emit(

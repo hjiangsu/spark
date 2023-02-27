@@ -7,7 +7,7 @@ class RedditClient {
 
   final reddit = Reddit(
     clientId: dotenv.env['REDDIT_CLIENT_ID']!,
-    clientSecret: dotenv.env['REDDIT_CLIENT_SECRET']!,
+    clientSecret: "",
     userAgent: dotenv.env['REDDIT_CLIENT_USER_AGENT']!,
     options: RedditOptions(callbackURL: dotenv.env['REDDIT_CLIENT_CALLBACK_URL']!),
   );

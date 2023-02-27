@@ -22,6 +22,9 @@ class _ActionBarState extends State<ActionBar> {
         case 0:
           widget.onRouteChange(AppMenu.feed);
           break;
+        case 1:
+          widget.onRouteChange(AppMenu.mail);
+          break;
         case 2:
           widget.onRouteChange(AppMenu.account);
           break;

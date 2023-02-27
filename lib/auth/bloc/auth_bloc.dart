@@ -32,22 +32,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
 
     try {
+      // First, perform anonymouse authorization with Reddit
+      await reddit.authorize();
+
       // Retrieve any user authorization if it exists
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? encodedAuthorizationMap = prefs.getString('userAuthorization');
       Map<String, dynamic>? decodedAuthorizationMap = (encodedAuthorizationMap != null) ? json.decode(encodedAuthorizationMap) : null;
 
+      // Re-authenticate with user token if provided
       if (decodedAuthorizationMap != null) {
         await reddit.authorization?.reauthorize(refreshCredentials: decodedAuthorizationMap);
       }
 
-      Redditor user = await reddit.me();
-      List<Subreddit> subscriptions = await user.subscriptions();
+      List<Subreddit> subscriptions = [];
+
+      if (reddit.authorization != null && reddit.authorization!.isUserAuthenticated) {
+        Redditor user = await reddit.me();
+        subscriptions = await user.subscriptions();
+      }
 
       emit(
         state.copyWith(
-          status: decodedAuthorizationMap != null ? AuthStatus.success : AuthStatus.failure,
-          isUserAuthorized: decodedAuthorizationMap != null,
+          status: AuthStatus.success,
+          isUserAuthorized: reddit.authorization?.isUserAuthenticated ?? false,
           subscriptions: subscriptions,
         ),
       );

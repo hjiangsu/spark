@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spark/spark.dart';
-import 'package:spark/auth/bloc/auth_bloc.dart';
-import 'package:spark/feed/bloc/feed_bloc.dart';
 import 'package:spark/theme/bloc/theme_bloc.dart';
-import 'package:spark/singletons/reddit_client.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -24,12 +21,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc(reddit: RedditClient.instance)),
-        BlocProvider<FeedBloc>(create: (context) => FeedBloc(reddit: RedditClient.instance)),
-      ],
+    return BlocProvider<ThemeBloc>(
+      create: (context) => ThemeBloc(),
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           switch (state.status) {

@@ -27,6 +27,7 @@
   <a href="#features">Features</a> •
   <a href="#roadmap">Roadmap</a> •
   <a href="#contributions">Contributing</a> •
+  <a href="#contributions">Conventions</a> •
   <a href="#license">Related Packages</a>
 </p>
 
@@ -47,6 +48,25 @@ Contributions are always welcomed here! To contribute features or bug-fixes:
 3. Create a pull request to have your changes reviewed
 
 More information regarding contributions will be added in the future.
+
+## Conventions
+This section lists some of the conventions used by the project to keep consistent behaviour and layouts.
+
+### File Structure
+The file structure is separated mainly by features. Each feature of the application will be hosted in its corresponding directory. For example, logic related to a Feed will be under the `lib/feed` directory.
+
+Shared logic across features will be located under `lib/`. For example:
+- Shared widgets will be located under `lib/widgets`.
+- Shared enums will be located under `lib/enums`.
+
+### BLoC
+This project uses BLoC as the state management library for most actions. Spark currently uses the following packages for handling state management:
+- [bloc](https://github.com/felangel/bloc/tree/master/packages/bloc) - handles general BLoC implementation schemes
+- [bloc_test](https://github.com/felangel/bloc/tree/master/packages/bloc_test) - handles testing of BLoC related logic
+- [bloc_concurrency](https://github.com/felangel/bloc/tree/master/packages/bloc_concurrency) - handles custom event transformers for BLoC related logic
+- [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) - handles integration of BLoCs into Flutter
+
+To learn more about BLoC and how it is used in Spark, reference the official [docs](https://bloclibrary.dev/#/).
 
 ## Related Packages
 
