@@ -1,11 +1,11 @@
-import 'package:badges/badges.dart';
-import 'package:flutter/material.dart' hide Badge;
+import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/feed/widgets/feed_card_heading.dart';
 import 'package:spark/theme/bloc/theme_bloc.dart';
+import 'package:spark/widgets/submission_badge/submission_badge.dart';
 
 class FeedCard extends StatefulWidget {
   const FeedCard({
@@ -66,18 +66,10 @@ class _FeedCardState extends State<FeedCard> {
                                   // pinnedBadge(),
                                   // contentBadge(),
                                   widget.post['over_18']
-                                      ? Badge(
-                                          badgeAnimation: const BadgeAnimation.fade(toAnimate: false),
-                                          badgeStyle: BadgeStyle(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                                            shape: BadgeShape.square,
-                                            badgeColor: const Color.fromARGB(255, 160, 53, 45),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          badgeContent: Text(
-                                            'NSFW',
-                                            style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
-                                          ),
+                                      ? const SubmissionBadge(
+                                          label: 'NSFW',
+                                          lightThemeColor: Color.fromARGB(255, 248, 194, 190),
+                                          darkThemeColor: Color.fromARGB(255, 160, 53, 45),
                                         )
                                       : Container(),
                                   // widget.post['saved']
