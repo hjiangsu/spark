@@ -1,10 +1,15 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/feed/widgets/feed_card_heading.dart';
+import 'package:spark/models/media/media.dart';
+import 'package:spark/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/theme/bloc/theme_bloc.dart';
+import 'package:spark/widgets/image_preview/image_preview.dart';
+import 'package:spark/widgets/link_preview_card/link_preview_card.dart';
 import 'package:spark/widgets/submission_badge/submission_badge.dart';
 
 class FeedCard extends StatefulWidget {
@@ -13,7 +18,7 @@ class FeedCard extends StatefulWidget {
     required this.post,
   });
 
-  final dynamic post;
+  final RedditSubmission post;
 
   @override
   State<FeedCard> createState() => _FeedCardState();
@@ -24,6 +29,12 @@ class _FeedCardState extends State<FeedCard> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
+
+    print('video: ${widget.post.video}');
+    print('image: ${widget.post.image}');
+    print('gallery: ${widget.post.gallery}');
+    print('external: ${widget.post.externalLink}');
+    print('');
 
     return Column(
       children: [
@@ -36,7 +47,7 @@ class _FeedCardState extends State<FeedCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // mediaWidget(),
+                  mediaWidget(),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +60,7 @@ class _FeedCardState extends State<FeedCard> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                HtmlUnescape().convert(widget.post['title']),
+                                HtmlUnescape().convert(widget.post.title),
                                 style: theme.textTheme.titleSmall,
                               ),
                               FeedCardHeading(post: widget.post),
@@ -65,7 +76,7 @@ class _FeedCardState extends State<FeedCard> {
                                 children: [
                                   // pinnedBadge(),
                                   // contentBadge(),
-                                  widget.post['over_18']
+                                  widget.post.nsfw
                                       ? const SubmissionBadge(
                                           label: 'NSFW',
                                           lightThemeColor: Color.fromARGB(255, 248, 194, 190),
@@ -123,5 +134,52 @@ class _FeedCardState extends State<FeedCard> {
         ),
       ],
     );
+  }
+
+  Widget getImageCarouselWidget(List<Media> media) {
+    return CarouselSlider(
+      options: CarouselOptions(
+        enableInfiniteScroll: false,
+        aspectRatio: 1.0,
+        enlargeCenterPage: true,
+      ),
+      items: media.map((media) {
+        return Builder(
+          builder: (BuildContext context) {
+            return ImagePreview(
+              url: media.url,
+              width: media.width!,
+              height: media.height!,
+              nsfw: false,
+            );
+          },
+        );
+      }).toList(),
+    );
+  }
+
+  Widget mediaWidget() {
+    // if (widget.post.video != null) {
+    //   return getVideoWidget(widget.post.videoURL);
+    // }
+
+    if (widget.post.gallery != null) {
+      return getImageCarouselWidget(widget.post.gallery!);
+    }
+
+    if (widget.post.image != null) {
+      return ImagePreview(
+        url: widget.post.image!.url,
+        height: widget.post.image!.height!,
+        width: widget.post.image!.width!,
+        nsfw: false,
+      );
+    }
+
+    if (widget.post.externalLink != null) {
+      return LinkPreviewCard(originURL: widget.post.externalLink!.url);
+    }
+
+    return Container();
   }
 }

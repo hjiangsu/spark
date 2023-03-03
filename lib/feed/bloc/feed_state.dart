@@ -11,11 +11,11 @@ class FeedState extends Equatable {
     this.subredditInstance,
     this.frontPage,
     this.category = CategoryOptions.best,
-    this.posts = const <dynamic>[],
+    this.posts = const <RedditSubmission>[],
   });
 
   final FeedStatus status;
-  final List<dynamic> posts;
+  final List<RedditSubmission> posts;
 
   final dynamic subredditInstance;
   final dynamic frontInstance;
@@ -28,7 +28,7 @@ class FeedState extends Equatable {
 
   FeedState copyWith({
     required FeedStatus status,
-    required List<dynamic> posts,
+    required List<RedditSubmission> posts,
     dynamic subredditInstance,
     dynamic frontInstance,
     String? subreddit,

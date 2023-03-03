@@ -46,6 +46,10 @@ dependencies:
   visibility_detector: ^0.3.3
   html_unescape: ^2.0.0
   badges: ^3.0.2
+  cached_network_image: ^3.2.3
+  photo_view: ^0.14.0
+  carousel_slider: ^4.2.1
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:

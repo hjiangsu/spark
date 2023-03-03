@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:spark/enums/front_page_options.dart';
+import 'package:spark/models/reddit_submission/reddit_submission.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
@@ -46,10 +47,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         submissions = await state.subredditInstance.more();
       }
 
-      List<dynamic> posts = List.of(state.posts);
+      List<RedditSubmission> posts = List.of(state.posts);
 
-      Iterable<Future<dynamic>> postFutures = submissions.map<Future<dynamic>>((post) => parseSubmission(post));
-      List<dynamic> newPosts = await Future.wait(postFutures);
+      Iterable<Future<RedditSubmission>> postFutures = submissions.map<Future<RedditSubmission>>((post) => parseSubmission(post));
+      List<RedditSubmission> newPosts = await Future.wait(postFutures);
 
       posts.addAll(newPosts);
 
@@ -173,14 +174,14 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           break;
       }
 
-      Iterable<Future<dynamic>> postFutures = submissions.map<Future<dynamic>>((post) => parseSubmission(post));
-      List<dynamic> posts = await Future.wait(postFutures);
+      Iterable<Future<RedditSubmission>> postFutures = submissions.map<Future<RedditSubmission>>((post) => parseSubmission(post));
+      List<RedditSubmission> posts = await Future.wait(postFutures);
 
       String? subredditName = (state.subreddit != event.subreddit) ? event.subreddit : state.subreddit;
       if (event.subreddit == null) {
         subredditName = null;
       } else {
-        subredditName = posts.first['subreddit'];
+        subredditName = posts.first.subreddit;
       }
 
       return emit(
