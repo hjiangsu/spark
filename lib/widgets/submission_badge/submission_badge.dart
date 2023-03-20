@@ -8,12 +8,14 @@ import 'package:spark/theme/bloc/theme_bloc.dart';
 class SubmissionBadge extends StatelessWidget {
   const SubmissionBadge({
     super.key,
-    required this.label,
+    this.label,
+    this.icon,
     required this.lightThemeColor,
     required this.darkThemeColor,
   });
 
-  final String label;
+  final String? label;
+  final Icon? icon;
   final Color lightThemeColor;
   final Color darkThemeColor;
 
@@ -30,10 +32,14 @@ class SubmissionBadge extends StatelessWidget {
         badgeColor: useDarkTheme ? darkThemeColor : lightThemeColor,
         borderRadius: BorderRadius.circular(8),
       ),
-      badgeContent: Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
-      ),
+      badgeContent: (label != null)
+          ? Text(
+              label!,
+              style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
+            )
+          : (icon != null)
+              ? icon
+              : null,
     );
   }
 }

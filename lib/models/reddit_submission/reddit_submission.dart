@@ -13,6 +13,7 @@ class RedditSubmission {
     this.image,
     this.gallery,
     this.externalLink,
+    this.text,
     required this.nsfw,
     required this.pinned,
     required this.awardCount,
@@ -39,6 +40,7 @@ class RedditSubmission {
   Media? image;
   List<Media>? gallery;
   Media? externalLink;
+  bool? text;
 
   bool nsfw;
   bool pinned;
