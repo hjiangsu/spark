@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_unescape/html_unescape.dart';
 
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/post/views/post_page.dart';
-import 'package:spark/theme/bloc/theme_bloc.dart';
-import 'package:spark/utils/numbers.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
+import 'package:spark/core/utils/numbers.dart';
 import 'package:spark/feed/widgets/post_heading.dart';
 import 'package:spark/widgets/badge_list/badge_list.dart';
 

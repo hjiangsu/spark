@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:spark/models/media/media.dart';
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/models/media/media.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/widgets/image_preview/image_preview.dart';
 import 'package:spark/widgets/link_preview_card/link_preview_card.dart';
 import 'package:video_player/video_player.dart';

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:reddit/reddit.dart';
-import 'package:spark/models/media/media.dart';
+import 'package:spark/core/models/media/media.dart';
+import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
 
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 
 /// Given a width and height, determine the appropriate re-sized dimensions based on the device screen size.
 Size _getScaledMediaSize({width, height, offset = 24.0}) {
@@ -147,27 +148,25 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
   // };
 }
 
-// parseComments(List<reddit.Comment>? comments) {
-//   if (comments == null) return;
+dynamic parseComments(List<Comment>? comments) {
+  List<RedditComment> _comments = [];
+  if (comments == null) return _comments;
 
-//   List<Comment> _comments = [];
+  for (Comment comment in comments) {
+    List<dynamic> _children = comment.children ?? [];
 
-//   for (reddit.Comment comment in comments) {
-//     print(comment);
-//     List<dynamic> _children = comment.children ?? [];
+    _comments.add(RedditComment(
+      id: comment.information["id"],
+      authorId: comment.information["author_fullname"] ?? "",
+      subredditId: comment.information["subreddit_id"],
+      author: comment.information["author"],
+      body: comment.information["body"],
+      upvotes: comment.information["ups"],
+      createdAt: comment.information["created_utc"].toInt() ?? 0,
+      replies: parseComments(comment.replies),
+      children: _children,
+    ));
+  }
 
-//     _comments.add(Comment(
-//       id: comment.information["id"],
-//       authorId: comment.information["author_fullname"] ?? "",
-//       subredditId: comment.information["subreddit_id"],
-//       author: comment.information["author"],
-//       body: comment.information["body"],
-//       upvotes: comment.information["ups"],
-//       createdAt: comment.information["created_utc"],
-//       replies: parseComments(comment.replies),
-//       children: _children,
-//     ));
-//   }
-
-//   return _comments;
-// }
+  return _comments;
+}

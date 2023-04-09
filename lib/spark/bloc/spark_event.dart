@@ -18,3 +18,9 @@ class AppBarVisibilityChanged extends SparkEvent {
 
   const AppBarVisibilityChanged({required this.hideAppBar});
 }
+
+class AppBarActionChanged extends SparkEvent {
+  final List<Widget> actions;
+
+  const AppBarActionChanged({required this.actions});
+}

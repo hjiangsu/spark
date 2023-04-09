@@ -1,14 +1,12 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html_unescape/html_unescape.dart';
+import 'package:spark/comment/comment.dart';
+
 import 'package:spark/feed/widgets/post_heading.dart';
 import 'package:spark/post/bloc/post_bloc.dart';
-import 'package:spark/singletons/reddit_client.dart';
-import 'package:spark/utils/numbers.dart';
-import 'package:spark/widgets/badge_list/badge_list.dart';
+import 'package:spark/core/singletons/reddit_client.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
-import 'package:spark/widgets/icon_text/icon_text.dart';
 import 'package:spark/widgets/media_view/media_view.dart';
 
 class PostPage extends StatelessWidget {
@@ -39,16 +37,18 @@ class PostPage extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                        child: IntrinsicHeight(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              PostHeading(post: state.post!),
-                              MediaView(post: state.post!),
-                            ],
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            PostHeading(post: state.post!),
+                            MediaView(post: state.post!),
+                          ],
                         ),
+                      ),
+                      CommentView(
+                        submissionId: state.post!.id,
+                        subreddit: state.post!.subreddit,
                       ),
                     ],
                   ),

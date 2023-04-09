@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:spark/enums/app_menu_options.dart';
+import 'package:spark/core/enums/app_menu_options.dart';
 
 class ActionBar extends StatefulWidget {
   const ActionBar({super.key, required this.onRouteChange});

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spark/spark/views/spark.dart';
-import 'package:spark/theme/bloc/theme_bloc.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override

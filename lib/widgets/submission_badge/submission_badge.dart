@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' hide Badge;
 import 'package:badges/badges.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:spark/theme/bloc/theme_bloc.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class SubmissionBadge extends StatelessWidget {
   const SubmissionBadge({

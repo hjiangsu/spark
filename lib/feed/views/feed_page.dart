@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:spark/core/enums/category_options.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 import 'package:spark/feed/feed.dart';
-import 'package:spark/enums/front_page_options.dart';
+import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/feed/widgets/feed_card.dart';
-import 'package:spark/spark/bloc/spark/spark_bloc.dart';
+import 'package:spark/spark/bloc/spark_bloc.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
 
 class FeedPage extends StatefulWidget {
@@ -18,6 +21,9 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   final _scrollController = ScrollController(initialScrollOffset: 0);
+
+  CategoryOptions? categoryOption = CategoryOptions.best;
+  IconData categoryIcon = Icons.rocket_launch_rounded;
 
   @override
   void initState() {
@@ -50,7 +56,7 @@ class _FeedPageState extends State<FeedPage> {
           case FeedStatus.success:
             context.read<SparkBloc>().add(AppBarTitleChanged(title: state.displayName ?? ''));
             context.read<SparkBloc>().add(const AppBarVisibilityChanged(hideAppBar: false));
-
+            context.read<SparkBloc>().add(AppBarActionChanged(actions: appBarActions()));
             return RefreshIndicator(
                 onRefresh: () async {
                   HapticFeedback.mediumImpact();
@@ -99,5 +105,114 @@ class _FeedPageState extends State<FeedPage> {
         }
       },
     );
+  }
+
+  List<Widget> appBarActions() {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
+              await prefs.setBool('useDarkTheme', !useDarkTheme);
+              context.read<ThemeBloc>().add(ThemeRefreshed());
+            },
+            icon: const Icon(Icons.dark_mode_outlined),
+          ),
+          const SizedBox(width: 8.0),
+          InkResponse(
+            radius: 20.0,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              context.read<FeedBloc>().add(FeedRefreshed(subreddit: "random"));
+            },
+            onLongPress: () {
+              HapticFeedback.heavyImpact();
+              context.read<FeedBloc>().add(FeedRefreshed(subreddit: "randnsfw"));
+            },
+            child: const Icon(Icons.shuffle_rounded),
+          ),
+          const SizedBox(width: 8.0),
+          PopupMenuButton<CategoryOptions>(
+            icon: Icon(categoryIcon),
+            position: PopupMenuPosition.under,
+            initialValue: categoryOption,
+            onSelected: (CategoryOptions value) {
+              setState(() {
+                categoryOption = value;
+
+                switch (categoryOption) {
+                  case CategoryOptions.best:
+                    categoryIcon = Icons.rocket_launch_rounded;
+                    break;
+                  case CategoryOptions.hot:
+                    categoryIcon = Icons.local_fire_department_rounded;
+                    break;
+                  case CategoryOptions.newest:
+                    categoryIcon = Icons.auto_awesome_rounded;
+                    break;
+                  case CategoryOptions.rising:
+                    categoryIcon = Icons.auto_graph_rounded;
+                    break;
+                  default:
+                    break;
+                }
+              });
+
+              context.read<FeedBloc>().add(FeedRefreshed(
+                    frontPage: context.read<FeedBloc>().state.frontPage,
+                    subreddit: context.read<FeedBloc>().state.subreddit,
+                    category: categoryOption,
+                  ));
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<CategoryOptions>>[
+              const PopupMenuItem<CategoryOptions>(
+                value: CategoryOptions.best,
+                child: Row(
+                  children: [
+                    Icon(Icons.rocket_launch_rounded, size: 20.0),
+                    SizedBox(width: 12.0),
+                    Text('Best'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<CategoryOptions>(
+                value: CategoryOptions.hot,
+                child: Row(
+                  children: [
+                    Icon(Icons.local_fire_department_rounded, size: 20.0),
+                    SizedBox(width: 12.0),
+                    Text('Hot'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<CategoryOptions>(
+                value: CategoryOptions.newest,
+                child: Row(
+                  children: [
+                    Icon(Icons.auto_awesome_rounded, size: 20.0),
+                    SizedBox(width: 12.0),
+                    Text('New'),
+                  ],
+                ),
+              ),
+              const PopupMenuItem<CategoryOptions>(
+                value: CategoryOptions.rising,
+                child: Row(
+                  children: [
+                    Icon(Icons.auto_graph_rounded, size: 20.0),
+                    SizedBox(width: 12.0),
+                    Text('Rising'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8.0),
+        ],
+      )
+    ];
   }
 }

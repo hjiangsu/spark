@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/widgets/submission_badge/submission_badge.dart';
 
 class BadgeList extends StatelessWidget {

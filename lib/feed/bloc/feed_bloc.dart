@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:spark/enums/front_page_options.dart';
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/enums/front_page_options.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 import 'package:reddit/reddit.dart';
 
-import 'package:spark/utils/parse.dart';
-import 'package:spark/enums/category_options.dart';
+import 'package:spark/core/utils/parse.dart';
+import 'package:spark/core/enums/category_options.dart';
 
 part 'feed_event.dart';
 part 'feed_state.dart';

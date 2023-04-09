@@ -1,4 +1,4 @@
-import 'package:spark/models/media/media.dart';
+import 'package:spark/core/models/media/media.dart';
 
 class RedditSubmission {
   RedditSubmission({

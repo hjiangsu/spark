@@ -83,7 +83,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           colorSchemeSeed = Colors.grey;
           break;
         default:
-          colorSchemeSeed = Colors.blueGrey;
+          colorSchemeSeed = Colors.blue;
           break;
       }
 

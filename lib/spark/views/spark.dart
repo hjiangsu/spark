@@ -1,21 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:pubnub/pubnub.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:spark/feed/feed.dart';
-import 'package:spark/enums/app_menu_options.dart';
-// import 'package:spark/account/account.dart';
-// import 'package:spark/settings/settings.dart';
-import 'package:spark/auth/bloc/auth_bloc.dart';
-import 'package:spark/singletons/reddit_client.dart';
-import 'package:spark/spark/bloc/spark/spark_bloc.dart';
-import 'package:spark/theme/theme.dart';
+import 'package:spark/core/enums/app_menu_options.dart';
+import 'package:spark/core/auth/bloc/auth_bloc.dart';
+import 'package:spark/core/singletons/reddit_client.dart';
+import 'package:spark/spark/bloc/spark_bloc.dart';
 import 'package:spark/widgets/bottom_app_bar/bottom_app_bar.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
 
@@ -29,21 +20,9 @@ class Spark extends StatefulWidget {
 class _SparkState extends State<Spark> {
   final PageController _pageController = PageController(initialPage: 0);
 
-  // App Bar
-  List<Widget> _appBarActions = [];
-  String? _appBarTitle;
-
-  // Hiding scaffold elements
-  bool _hideAppBar = false;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  /// Generates a Text widget based on the appBarTitle
-  Widget getAppBarTitle() {
-    return AutoSizeText(_appBarTitle ?? "", maxLines: 1);
   }
 
   void onRouteChange(int pageIndex) {
@@ -70,24 +49,13 @@ class _SparkState extends State<Spark> {
               return BlocBuilder<SparkBloc, SparkState>(
                 builder: (context, state) {
                   return Scaffold(
-                    appBar: state.hideAppBar
+                    appBar: state.appBarInformation.hidden
                         ? null
                         : AppBar(
                             toolbarHeight: 70.0,
                             centerTitle: false,
-                            title: Text(state.appBarTitle),
-                            actions: [
-                              // this theme changer is temporary
-                              IconButton(
-                                onPressed: () async {
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
-                                  await prefs.setBool('useDarkTheme', !useDarkTheme);
-                                  context.read<ThemeBloc>().add(ThemeRefreshed());
-                                },
-                                icon: const Icon(Icons.dark_mode_outlined),
-                              ),
-                            ],
+                            title: Text(state.appBarInformation.title),
+                            actions: state.appBarInformation.actions,
                           ),
                     body: PageView(
                       controller: _pageController,

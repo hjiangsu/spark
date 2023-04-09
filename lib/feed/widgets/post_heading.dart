@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/feed/bloc/feed_bloc.dart';
-import 'package:spark/models/reddit_submission/reddit_submission.dart';
-import 'package:spark/theme/bloc/theme_bloc.dart';
-import 'package:spark/utils/datetime.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
+import 'package:spark/core/utils/datetime.dart';
 
 class PostHeading extends StatelessWidget {
   const PostHeading({
