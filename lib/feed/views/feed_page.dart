@@ -45,6 +45,8 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   Widget build(BuildContext context) {
+    final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
+
     return BlocBuilder<FeedBloc, FeedState>(
       builder: (context, state) {
         switch (state.status) {
@@ -64,14 +66,21 @@ class _FeedPageState extends State<FeedPage> {
                 },
                 child: ListView.builder(
                   controller: _scrollController,
-                  itemCount: state.posts.length,
+                  itemCount: state.posts.length + 1,
                   itemBuilder: (context, index) {
-                    return FeedCard(post: state.posts[index]);
-                    // return FeedPostCard(
-                    //   post: state.posts[index - 1],
-                    //   // showExpandedMedia: showExpandedMedia,
-                    //   index: index - 1,
-                    // );
+                    if (index != state.posts.length) {
+                      return FeedCard(post: state.posts[index]);
+                    } else {
+                      return Column(
+                        children: [
+                          Divider(color: useDarkTheme ? Colors.grey.shade900 : Colors.grey.shade100),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        ],
+                      );
+                    }
                   },
                 )
 
@@ -112,6 +121,12 @@ class _FeedPageState extends State<FeedPage> {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          IconButton(
+            onPressed: () async {
+              context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
+            },
+            icon: const Icon(Icons.home_rounded),
+          ),
           IconButton(
             onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();

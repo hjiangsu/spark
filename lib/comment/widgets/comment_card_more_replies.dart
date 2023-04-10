@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:spark/comment/bloc/comment_bloc.dart';
 
 class CommentCardMoreReplies extends StatefulWidget {
@@ -23,6 +25,13 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
     Colors.blue.shade300,
     Colors.indigo.shade300,
   ];
+
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +61,39 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  onTap: () => context.read<CommentBloc>().add(
-                        CommentFetched(
-                          submissionId: widget.submissionId,
-                          commentId: widget.commentId,
-                        ),
-                      ),
+                  onTap: () {
+                    context.read<CommentBloc>().add(
+                          CommentFetched(
+                            submissionId: widget.submissionId,
+                            commentId: widget.commentId,
+                          ),
+                        );
+                    setState(() {
+                      isLoading = true;
+                    });
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Container(
-                          child: Text(
-                            'View more replies',
-                            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4.0, right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'View more replies',
+                                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                              ),
+                              isLoading
+                                  ? const SizedBox(
+                                      height: 12.0,
+                                      width: 12.0,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    )
+                                  : Container(),
+                            ],
                           ),
                         ),
                       ),

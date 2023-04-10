@@ -18,7 +18,7 @@ class CommentCard extends StatefulWidget {
   State<CommentCard> createState() => _CommentCardState();
 }
 
-class _CommentCardState extends State<CommentCard> {
+class _CommentCardState extends State<CommentCard> with TickerProviderStateMixin {
   List<Color> colors = [
     Colors.red.shade300,
     Colors.orange.shade300,
@@ -29,6 +29,7 @@ class _CommentCardState extends State<CommentCard> {
   ];
 
   bool isHidden = true;
+  GlobalKey childKey = GlobalKey();
 
   @override
   void initState() {
@@ -42,7 +43,14 @@ class _CommentCardState extends State<CommentCard> {
 
     return Container(
       decoration: BoxDecoration(
-        border: widget.level > 0 ? Border(left: BorderSide(width: 4.0, color: colors[((widget.level - 1) % 6).toInt()])) : const Border(),
+        border: widget.level > 0
+            ? Border(
+                left: BorderSide(
+                  width: 4.0,
+                  color: colors[((widget.level - 1) % 6).toInt()],
+                ),
+              )
+            : const Border(),
       ),
       margin: const EdgeInsets.only(left: 1.0),
       child: Column(
@@ -63,33 +71,47 @@ class _CommentCardState extends State<CommentCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Container(
-                          padding: isHidden ? EdgeInsets.zero : const EdgeInsets.only(bottom: 8.0),
-                          child: Text(
-                            HtmlUnescape().convert(widget.comment.author),
-                            style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSecondaryContainer),
-                          ),
+                        child: Text(
+                          HtmlUnescape().convert(widget.comment.author),
+                          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSecondaryContainer),
                         ),
                       ),
                     ],
                   ),
                 ),
-                isHidden ? Container() : CommentCardBody(body: widget.comment.body),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.fastOutSlowIn,
+                  child: AnimatedOpacity(
+                    opacity: isHidden ? 0.0 : 1.0,
+                    curve: Curves.fastOutSlowIn,
+                    duration: const Duration(milliseconds: 200),
+                    child: isHidden ? Container() : CommentCardBody(body: widget.comment.body),
+                  ),
+                ),
               ],
             ),
           ),
-          isHidden
-              ? Container()
-              : ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) => CommentCard(
-                    comment: widget.comment.replies[index],
-                    level: widget.level + 1,
-                    collapsed: widget.level > 2,
-                  ),
-                  itemCount: widget.comment.replies?.length,
+          AnimatedContainer(
+            key: childKey,
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.fastOutSlowIn,
+            child: AnimatedOpacity(
+              opacity: isHidden ? 0.0 : 1.0,
+              curve: Curves.fastOutSlowIn,
+              duration: const Duration(milliseconds: 200),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => CommentCard(
+                  comment: widget.comment.replies[index],
+                  level: widget.level + 1,
+                  collapsed: widget.level > 2,
                 ),
+                itemCount: isHidden ? 0 : widget.comment.replies?.length,
+              ),
+            ),
+          ),
           (widget.comment.children.length > 0 && isHidden == false)
               ? CommentCardMoreReplies(level: widget.level + 1, submissionId: widget.comment.submissionId, commentId: widget.comment.id)
               : Container(),

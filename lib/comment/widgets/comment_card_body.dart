@@ -9,6 +9,9 @@ class CommentCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(HtmlUnescape().convert(body));
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Text(HtmlUnescape().convert(body)),
+    );
   }
 }

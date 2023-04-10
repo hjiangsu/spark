@@ -24,22 +24,27 @@ class SubmissionBadge extends StatelessWidget {
     final theme = Theme.of(context);
     final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
 
-    return Badge(
-      badgeAnimation: const BadgeAnimation.fade(toAnimate: false),
-      badgeStyle: BadgeStyle(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        shape: BadgeShape.square,
-        badgeColor: useDarkTheme ? darkThemeColor : lightThemeColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      badgeContent: (label != null)
-          ? Text(
-              label!,
-              style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
-            )
-          : (icon != null)
-              ? icon
-              : null,
+    return Row(
+      children: [
+        Badge(
+          badgeAnimation: const BadgeAnimation.fade(toAnimate: false),
+          badgeStyle: BadgeStyle(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+            shape: BadgeShape.square,
+            badgeColor: useDarkTheme ? darkThemeColor : lightThemeColor,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          badgeContent: (label != null)
+              ? Text(
+                  label!,
+                  style: theme.textTheme.labelSmall?.copyWith(fontSize: 10),
+                )
+              : (icon != null)
+                  ? icon
+                  : null,
+        ),
+        const SizedBox(width: 8.0),
+      ],
     );
   }
 }
