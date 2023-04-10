@@ -10,9 +10,10 @@ import 'package:spark/widgets/error_message/error_message.dart';
 import 'package:spark/widgets/media_view/media_view.dart';
 
 class PostPage extends StatelessWidget {
-  const PostPage({super.key, required this.postId});
+  PostPage({super.key, required this.postId});
 
   final String postId;
+  final GlobalKey scrollControllerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class PostPage extends StatelessWidget {
               return Scaffold(
                 appBar: AppBar(),
                 body: SingleChildScrollView(
+                  key: scrollControllerKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

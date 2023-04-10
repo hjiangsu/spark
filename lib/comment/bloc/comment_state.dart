@@ -1,6 +1,6 @@
 part of 'comment_bloc.dart';
 
-enum CommentStatus { initial, loading, success, empty, failure }
+enum CommentStatus { initial, loading, fetching, success, empty, failure }
 
 class CommentState extends Equatable {
   const CommentState({
@@ -24,7 +24,7 @@ class CommentState extends Equatable {
   }) {
     return CommentState(
       status: status,
-      commentTree: commentTree,
+      commentTree: commentTree ?? this.commentTree,
       comments: comments ?? [],
       children: children ?? [],
     );

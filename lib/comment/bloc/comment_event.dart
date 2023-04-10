@@ -5,7 +5,13 @@ abstract class CommentEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class CommentFetched extends CommentEvent {}
+class CommentFetched extends CommentEvent {
+  final String? subreddit;
+  final String submissionId;
+  final String? commentId;
+
+  CommentFetched({this.subreddit, required this.submissionId, this.commentId});
+}
 
 class CommentRefreshed extends CommentEvent {
   final String? subreddit;

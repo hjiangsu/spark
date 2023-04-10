@@ -31,7 +31,7 @@ dependencies:
   reddit:
     git:
       url: git@github.com:hjiangsu/reddit-dart.git
-      ref: v0.1.12-alpha
+      ref: v0.1.13-alpha
   cupertino_icons: ^1.0.2
   bloc: ^8.1.1
   flutter_bloc: ^8.1.2

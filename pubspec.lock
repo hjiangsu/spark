@@ -652,8 +652,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.12-alpha"
-      resolved-ref: "7b412e41303554704dda4a73bd9d06fedb42d810"
+      ref: "v0.1.13-alpha"
+      resolved-ref: cd472891581902d1f396fd42d6942458e566dc3f
       url: "git@github.com:hjiangsu/reddit-dart.git"
     source: git
     version: "0.1.11-alpha"

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:html_unescape/html_unescape.dart';
+
+import 'package:spark/comment/widgets/comment_card_body.dart';
+import 'package:spark/comment/widgets/comment_card_more_replies.dart';
 
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
 
@@ -15,7 +19,14 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
-  List<Color> colors = [Colors.red.shade300, Colors.orange.shade300, Colors.yellow.shade300, Colors.green.shade300, Colors.blue.shade300, Colors.indigo.shade300];
+  List<Color> colors = [
+    Colors.red.shade300,
+    Colors.orange.shade300,
+    Colors.yellow.shade300,
+    Colors.green.shade300,
+    Colors.blue.shade300,
+    Colors.indigo.shade300,
+  ];
 
   bool isHidden = true;
 
@@ -31,14 +42,9 @@ class _CommentCardState extends State<CommentCard> {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          left: BorderSide(
-            width: 4.0,
-            color: colors[(widget.level % 6).toInt()],
-          ),
-        ),
+        border: widget.level > 0 ? Border(left: BorderSide(width: 4.0, color: colors[((widget.level - 1) % 6).toInt()])) : const Border(),
       ),
-      margin: widget.level != 0 ? const EdgeInsets.only(left: 1.0) : EdgeInsets.zero,
+      margin: const EdgeInsets.only(left: 1.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -68,7 +74,7 @@ class _CommentCardState extends State<CommentCard> {
                     ],
                   ),
                 ),
-                isHidden ? Container() : Text(HtmlUnescape().convert(widget.comment.body)),
+                isHidden ? Container() : CommentCardBody(body: widget.comment.body),
               ],
             ),
           ),
@@ -77,15 +83,16 @@ class _CommentCardState extends State<CommentCard> {
               : ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return CommentCard(
-                      comment: widget.comment.replies[index],
-                      level: widget.level + 1,
-                      collapsed: widget.level > 3,
-                    );
-                  },
+                  itemBuilder: (context, index) => CommentCard(
+                    comment: widget.comment.replies[index],
+                    level: widget.level + 1,
+                    collapsed: widget.level > 2,
+                  ),
                   itemCount: widget.comment.replies?.length,
                 ),
+          (widget.comment.children.length > 0 && isHidden == false)
+              ? CommentCardMoreReplies(level: widget.level + 1, submissionId: widget.comment.submissionId, commentId: widget.comment.id)
+              : Container(),
         ],
       ),
     );

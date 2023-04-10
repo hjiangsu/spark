@@ -5,6 +5,7 @@ class RedditComment {
     required this.id,
     required this.authorId,
     required this.subredditId,
+    required this.submissionId,
     required this.body,
     required this.author,
     required this.upvotes,
@@ -17,6 +18,7 @@ class RedditComment {
   String id;
   String authorId;
   String subredditId;
+  String submissionId;
 
   String body;
   String author;
