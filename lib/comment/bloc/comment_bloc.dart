@@ -33,16 +33,18 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
   final Reddit reddit;
 
+  /// Call this function when fetching more comments from either a comment thread, or top-level comments
   Future<void> _onCommentFetched(CommentFetched event, Emitter<CommentState> emit) async {
     emit(state.copyWith(status: CommentStatus.fetching, comments: state.comments, children: state.children));
 
     try {
-      // Fetch commentTree, and run more() function
       CommentTree? commentTree = state.commentTree;
+      if (commentTree == null) throw Exception('Error: Could not obtain commentTree from state');
 
-      if (commentTree == null) throw Exception('Missing commentTree');
-      await commentTree.more(commentId: event.commentId); //jfpe8y1, 14 children
+      // Fetch more comments with the given commentId (if it exists)
+      await commentTree.more(commentId: event.commentId);
 
+      // Perform parsing for the new comments
       List<RedditComment> comments = await parseComments(commentTree.comments ?? [], submissionId: event.submissionId);
       List<String> children = List.from(commentTree.moreComments != null ? commentTree.moreComments as Iterable : []);
 
@@ -59,11 +61,12 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     }
   }
 
+  /// Call this function when first initializing comments from a submission
   Future<void> _onCommentRefreshed(CommentRefreshed event, Emitter<CommentState> emit) async {
     try {
-      dynamic commentTree = await reddit.commentTree(submissionId: event.submissionId.substring(3), subreddit: event.subreddit, commentId: event.commentId);
+      CommentTree commentTree = await reddit.commentTree(submissionId: event.submissionId.substring(3), subreddit: event.subreddit, commentId: event.commentId);
 
-      // CommentTree commentTree = await reddit.commentTree(submissionId: event.submissionId, subreddit: event.subreddit, commentId: event.commentId);
+      // Perform parsing for the new comments
       List<RedditComment> comments = await parseComments(commentTree.comments ?? [], submissionId: event.submissionId);
       List<String> children = List.from(commentTree.moreComments != null ? commentTree.moreComments as Iterable : []);
 

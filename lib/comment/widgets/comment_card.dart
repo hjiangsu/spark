@@ -6,19 +6,32 @@ import 'package:spark/comment/widgets/comment_card_body.dart';
 import 'package:spark/comment/widgets/comment_card_more_replies.dart';
 
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
+import 'package:spark/core/utils/datetime.dart';
+import 'package:spark/core/utils/numbers.dart';
 
 class CommentCard extends StatefulWidget {
-  RedditComment comment;
-  int level;
-  bool collapsed;
+  /// Creates a comment card
+  CommentCard({
+    super.key,
+    required this.comment,
+    this.level = 0,
+    this.collapsed = false,
+  });
 
-  CommentCard({super.key, required this.comment, this.level = 0, this.collapsed = false});
+  /// Comment containing relevant information
+  RedditComment comment;
+
+  /// The level of the comment within the comment tree - a higher level indicates a greater indentation
+  int level;
+
+  /// Whether the comment is collapsed or expanded
+  bool collapsed;
 
   @override
   State<CommentCard> createState() => _CommentCardState();
 }
 
-class _CommentCardState extends State<CommentCard> with TickerProviderStateMixin {
+class _CommentCardState extends State<CommentCard> {
   List<Color> colors = [
     Colors.red.shade300,
     Colors.orange.shade300,
@@ -58,39 +71,56 @@ class _CommentCardState extends State<CommentCard> with TickerProviderStateMixin
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: () => setState(() => isHidden = !isHidden),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => isHidden = !isHidden),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          HtmlUnescape().convert(widget.comment.author),
-                          style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSecondaryContainer),
+                        child: Row(
+                          children: [
+                            Text(
+                              HtmlUnescape().convert(widget.comment.author),
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onTertiaryContainer,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            const Icon(Icons.north, size: 12.0),
+                            const SizedBox(width: 2.0),
+                            Text(
+                              HtmlUnescape().convert(formatNumberToK(widget.comment.upvotes)),
+                              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface),
+                            ),
+                          ],
                         ),
                       ),
+                      Text(
+                        formatTimeToString(epochTime: widget.comment.createdAt.toInt()),
+                        style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onBackground),
+                      )
                     ],
                   ),
                 ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 200),
+              ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.fastOutSlowIn,
+                child: AnimatedOpacity(
+                  opacity: isHidden ? 0.0 : 1.0,
                   curve: Curves.fastOutSlowIn,
-                  child: AnimatedOpacity(
-                    opacity: isHidden ? 0.0 : 1.0,
-                    curve: Curves.fastOutSlowIn,
-                    duration: const Duration(milliseconds: 200),
-                    child: isHidden ? Container() : CommentCardBody(body: widget.comment.body),
-                  ),
+                  duration: const Duration(milliseconds: 200),
+                  child: isHidden ? Container() : CommentCardBody(body: widget.comment.body),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           AnimatedContainer(
             key: childKey,
