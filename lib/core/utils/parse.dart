@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:imgur/imgur.dart';
 
 import 'package:reddit/reddit.dart';
 import 'package:spark/core/models/media/media.dart';
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/singletons/imgur_client.dart';
 
 /// Given a width and height, determine the appropriate re-sized dimensions based on the device screen size.
 Size _getScaledMediaSize({width, height, offset = 24.0}) {
@@ -79,30 +81,49 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
 
     mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
   } else if (overriddenURL.startsWith("https://www.reddit.com/gallery/")) {
-    // Handle reddit gallery links
-    isGallery = true;
+    try {
+      // Handle reddit gallery links
+      isGallery = true;
 
-    submission.information["media_metadata"].forEach((key, value) {
-      String mediaLink = HtmlUnescape().convert(value["s"]["u"] ?? value["s"]["gif"]);
-      int originalHeight = value["s"]["y"];
-      int originalWidth = value["s"]["x"];
+      submission.information["media_metadata"].forEach((key, value) {
+        String mediaLink = HtmlUnescape().convert(value["s"]["u"] ?? value["s"]["gif"]);
+        int originalHeight = value["s"]["y"];
+        int originalWidth = value["s"]["x"];
 
-      Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
+        Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
-      mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
-    });
+        mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+      });
+    } catch (e) {
+      print(e);
+    }
   } else {
     // Handle special cases
-    if (overriddenURL.startsWith("https://imgur.com")) {
-      isImage = true;
-      String mediaLink = overriddenURL;
-      Size imageDimensions = await _calculateImageDimension(overriddenURL);
-      double originalHeight = imageDimensions.height;
-      double originalWidth = imageDimensions.width;
+    if (overriddenURL.contains("imgur.com")) {
+      try {
+        // Use imgur API to get image information
+        Imgur imgur = ImgurClient.instance;
+        ImgurImage image = await imgur.image(url: overriddenURL);
 
-      Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
+        String mediaType = image.information!["type"];
+        print(image.information!["type"]);
 
-      mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+        if (mediaType.contains('mp4')) {
+          isVideo = true;
+        } else {
+          isImage = true;
+        }
+
+        String mediaLink = image.information!["link"];
+        double originalHeight = image.information!["height"].toDouble();
+        double originalWidth = image.information!["width"].toDouble();
+
+        Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
+
+        mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+      } catch (e) {
+        print(e);
+      }
     } else {
       // Handle external links
       isExternalLink = true;
@@ -134,18 +155,6 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
     upvoted: submission.information["likes"] == true,
     downvoted: submission.information["likes"] == false,
   );
-  //   thumbnail: submission.information["thumbnail"],
-  //   createdAt: submission.information["created_utc"],
-  //   originUrl: url ?? "",
-  //   imageURL: imageURL,
-  //   videoURL: videoURL,
-  //   mediaWidth: mediaWidth,
-  //   mediaHeight: mediaHeight,
-  //   mediaMaxHeight: mediaMaxHeight,
-  //   mediaMaxWidth: mediaMaxWidth,
-  //   mediaRatio: mediaRatio,
-  //   mediaInformation: mediaInformation,
-  // };
 }
 
 dynamic parseComments(List<Comment>? comments, {required String submissionId}) {

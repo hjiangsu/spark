@@ -55,22 +55,16 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
         children: [
           const Divider(height: 1),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {
-                    context.read<CommentBloc>().add(
-                          CommentFetched(
-                            submissionId: widget.submissionId,
-                            commentId: widget.commentId,
-                          ),
-                        );
-                    setState(() {
-                      isLoading = true;
-                    });
+                    context.read<CommentBloc>().add(CommentFetched(submissionId: widget.submissionId, commentId: widget.commentId));
+                    setState(() => isLoading = true);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
