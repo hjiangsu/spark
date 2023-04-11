@@ -33,6 +33,7 @@ class SubmissionBadge extends StatelessWidget {
             shape: BadgeShape.square,
             badgeColor: useDarkTheme ? darkThemeColor : lightThemeColor,
             borderRadius: BorderRadius.circular(8),
+            elevation: 0,
           ),
           badgeContent: (label != null)
               ? Text(

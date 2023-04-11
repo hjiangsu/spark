@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:html_unescape/html_unescape.dart';
 
@@ -9,9 +10,14 @@ class CommentCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
-      child: Text(HtmlUnescape().convert(body)),
+      child: MarkdownBody(
+        data: HtmlUnescape().convert(body),
+        styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(p: const TextStyle(fontSize: 12)),
+      ),
     );
   }
 }

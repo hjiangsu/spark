@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:spark/comment/comment.dart';
 
 import 'package:spark/feed/widgets/post_heading.dart';
@@ -45,6 +47,13 @@ class PostPage extends StatelessWidget {
                           children: [
                             PostHeading(post: state.post!),
                             MediaView(post: state.post!),
+                            (state.post?.text == true)
+                                ? MarkdownBody(
+                                    data: HtmlUnescape().convert(state.post!.description),
+                                    styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(p: const TextStyle(fontSize: 12)),
+                                  )
+                                : Container(),
+                            const SizedBox(height: 8.0),
                           ],
                         ),
                       ),

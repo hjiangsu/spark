@@ -57,6 +57,7 @@ dependencies:
   video_player: ^2.5.3
   flutter_cache_manager: ^3.3.0
   chewie: ^1.4.0
+  flutter_markdown: ^0.6.14
 
 dev_dependencies:
   flutter_test:
