@@ -16,7 +16,12 @@ class CommentCardBody extends StatelessWidget {
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
       child: MarkdownBody(
         data: HtmlUnescape().convert(body),
-        styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(p: const TextStyle(fontSize: 12)),
+        styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
+            p: const TextStyle(fontSize: 12),
+            blockquoteDecoration: const BoxDecoration(
+              color: Colors.transparent,
+              border: Border(left: BorderSide(color: Colors.grey, width: 4)),
+            )),
       ),
     );
   }

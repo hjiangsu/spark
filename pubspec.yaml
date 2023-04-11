@@ -58,6 +58,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   chewie: ^1.4.0
   flutter_markdown: ^0.6.14
+  sentry_flutter: ^7.4.2
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +66,7 @@ dev_dependencies:
   test: ^1.23.1
   bloc_test: ^9.1.1
   flutter_lints: ^2.0.0
+  sentry_dart_plugin: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -108,3 +110,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+# The following section is specific to Sentry.
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  upload_sources: true

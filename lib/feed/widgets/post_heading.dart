@@ -27,7 +27,7 @@ class PostHeading extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AutoSizeText(
+          Text(
             HtmlUnescape().convert(post.title),
             style: theme.textTheme.titleSmall,
           ),

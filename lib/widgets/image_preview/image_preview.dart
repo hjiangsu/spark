@@ -71,6 +71,8 @@ class _ImagePreviewState extends State<ImagePreview> {
                 imageUrl: widget.url,
                 height: widget.height,
                 width: double.infinity,
+                memCacheHeight: widget.height.toInt(),
+                memCacheWidth: widget.width.toInt(),
                 fit: BoxFit.fitWidth,
                 progressIndicatorBuilder: (context, url, downloadProgress) => Container(
                   color: Colors.grey.shade900,

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:spark/spark/views/spark.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
@@ -34,6 +35,9 @@ class _AppState extends State<App> {
                 debugShowCheckedModeBanner: false,
                 themeMode: state.useDarkTheme ? ThemeMode.dark : ThemeMode.light,
                 scrollBehavior: CustomScrollBehavior(),
+                navigatorObservers: [
+                  SentryNavigatorObserver(),
+                ],
                 theme: ThemeData(
                   useMaterial3: true,
                   brightness: Brightness.light,

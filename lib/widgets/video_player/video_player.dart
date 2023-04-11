@@ -98,7 +98,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       //     ),
     );
     _chewie?.setVolume(0.0);
-    if (widget.onVideoInitialized != null) widget.onVideoInitialized!(_controller!);
+    if (widget.onVideoInitialized != null && _controller != null) widget.onVideoInitialized!(_controller!);
     setState(() {});
   }
 
