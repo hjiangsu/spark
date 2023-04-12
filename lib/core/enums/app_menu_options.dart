@@ -1,1 +1,1 @@
-enum AppMenu { feed, mail, account, settings }
+enum AppMenu { feed, search, mail, account, settings }

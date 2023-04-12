@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:spark/core/enums/app_menu_options.dart';
 import 'package:spark/core/models/appbar_information/appbar_information.dart';
 
 part 'spark_event.dart';
@@ -30,6 +31,12 @@ class SparkBloc extends Bloc<SparkEvent, SparkState> {
       emit(state.copyWith(
         status: SparkStatus.success,
         appBarInformation: AppBarInformation(title: state.appBarInformation.title, hidden: state.appBarInformation.hidden, actions: event.actions),
+      ));
+    });
+    on<ActivePageChanged>((event, emit) {
+      emit(state.copyWith(
+        status: SparkStatus.success,
+        activePage: event.appMenu,
       ));
     });
   }

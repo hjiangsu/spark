@@ -38,7 +38,10 @@ class CommentView extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 if (state.children.isNotEmpty && index == state.comments.length) {
-                  return CommentCardMoreReplies(submissionId: submissionId);
+                  return CommentCardMoreReplies(
+                    submissionId: submissionId,
+                    message: 'Fetch more comments...',
+                  );
                 } else {
                   return CommentCard(comment: state.comments[index]);
                 }

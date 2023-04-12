@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'theme_event.dart';
@@ -94,8 +95,9 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           useDarkTheme: useDarkTheme,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith());
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 }

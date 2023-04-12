@@ -29,7 +29,7 @@ class PostHeading extends StatelessWidget {
         children: [
           Text(
             HtmlUnescape().convert(post.title),
-            style: theme.textTheme.titleSmall,
+            style: theme.textTheme.titleMedium,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
@@ -39,14 +39,14 @@ class PostHeading extends StatelessWidget {
                   onTap: () => context.read<FeedBloc>().add(FeedRefreshed(subreddit: post.subreddit)),
                   child: Text(
                     post.subreddit,
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: useDarkTheme ? Colors.grey.shade400 : Colors.grey.shade900,
                     ),
                   ),
                 ),
                 Text(
                   ' · ${formatTimeToString(epochTime: post.createdAt.toInt())} · ',
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: theme.textTheme.bodyMedium?.copyWith(
                     color: useDarkTheme ? Colors.grey.shade400 : Colors.grey.shade900,
                   ),
                 ),
@@ -56,7 +56,7 @@ class PostHeading extends StatelessWidget {
                   },
                   child: Text(
                     post.author,
-                    style: theme.textTheme.bodySmall?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: useDarkTheme ? Colors.grey.shade400 : Colors.grey.shade900,
                     ),
                   ),

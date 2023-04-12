@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -46,8 +47,9 @@ class PostBloc extends Bloc<PostEvent, PostState> {
           post: post,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: PostStatus.failure));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 }

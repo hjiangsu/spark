@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -59,8 +60,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           subscriptions: subscriptions,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: AuthStatus.failure));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 }

@@ -27,6 +27,7 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   void initState() {
+    print('helllloo');
     _scrollController.addListener(_onScroll);
     super.initState();
   }
@@ -106,7 +107,10 @@ class _FeedPageState extends State<FeedPage> {
                 // ),
                 );
           case FeedStatus.empty:
-            return const ErrorMessage(message: 'No posts were found');
+            return const ErrorMessage(
+              message: 'No posts were found',
+              icon: Icons.not_interested_rounded,
+            );
           case FeedStatus.failure:
             return const ErrorMessage(message: 'Oops, an unexpected error occurred.');
           default:

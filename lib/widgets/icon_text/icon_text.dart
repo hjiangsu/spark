@@ -35,7 +35,7 @@ class IconText extends StatelessWidget {
                     text,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 14,
                     ),
                   ),
                   suffixIcon != null

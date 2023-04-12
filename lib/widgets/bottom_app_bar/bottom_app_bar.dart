@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spark/core/enums/app_menu_options.dart';
+import 'package:spark/spark/spark.dart';
 
 class ActionBar extends StatefulWidget {
-  const ActionBar({super.key, required this.onRouteChange});
+  const ActionBar({super.key, this.activePage = 0});
 
-  final ValueSetter<AppMenu> onRouteChange;
+  final int activePage;
 
   @override
   State<ActionBar> createState() => _ActionBarState();
 }
 
 class _ActionBarState extends State<ActionBar> {
-  int _selectedIndex = 0;
-
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
-
       switch (index) {
         case 0:
-          widget.onRouteChange(AppMenu.feed);
+          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.feed));
           break;
         case 1:
-          widget.onRouteChange(AppMenu.mail);
+          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.search));
           break;
         case 2:
-          widget.onRouteChange(AppMenu.account);
+          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.mail));
           break;
         case 3:
-          widget.onRouteChange(AppMenu.settings);
+          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.account));
+          break;
+        case 4:
+          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.settings));
           break;
       }
     });
@@ -47,33 +48,41 @@ class _ActionBarState extends State<ActionBar> {
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.dashboard_rounded,
-              color: (_selectedIndex == 0) ? theme.colorScheme.primary : null,
+              color: (widget.activePage == 0) ? theme.colorScheme.primary : null,
             ),
             onPressed: () => _onItemTapped(0),
           ),
           IconButton(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
-              Icons.mail,
-              color: (_selectedIndex == 1) ? theme.colorScheme.primary : null,
+              Icons.search,
+              color: (widget.activePage == 1) ? theme.colorScheme.primary : null,
             ),
             onPressed: () => _onItemTapped(1),
           ),
           IconButton(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
-              Icons.person,
-              color: (_selectedIndex == 2) ? theme.colorScheme.primary : null,
+              Icons.mail,
+              color: (widget.activePage == 2) ? theme.colorScheme.primary : null,
             ),
             onPressed: () => _onItemTapped(2),
           ),
           IconButton(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
-              Icons.settings,
-              color: (_selectedIndex == 3) ? theme.colorScheme.primary : null,
+              Icons.person,
+              color: (widget.activePage == 3) ? theme.colorScheme.primary : null,
             ),
             onPressed: () => _onItemTapped(3),
+          ),
+          IconButton(
+            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
+            icon: Icon(
+              Icons.settings,
+              color: (widget.activePage == 4) ? theme.colorScheme.primary : null,
+            ),
+            onPressed: () => _onItemTapped(4),
           ),
         ],
       ),

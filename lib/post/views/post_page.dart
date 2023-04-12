@@ -51,7 +51,7 @@ class PostPage extends StatelessWidget {
                                 ? MarkdownBody(
                                     data: HtmlUnescape().convert(state.post!.description),
                                     styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-                                      p: const TextStyle(fontSize: 12),
+                                      p: const TextStyle(fontSize: 14),
                                       blockquoteDecoration: const BoxDecoration(
                                         color: Colors.transparent,
                                         border: Border(left: BorderSide(color: Colors.grey, width: 4)),

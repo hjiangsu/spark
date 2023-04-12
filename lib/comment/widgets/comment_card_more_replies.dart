@@ -10,7 +10,15 @@ class CommentCardMoreReplies extends StatefulWidget {
   String submissionId;
   String? commentId;
 
-  CommentCardMoreReplies({super.key, this.level = 0, required this.submissionId, this.commentId});
+  String message;
+
+  CommentCardMoreReplies({
+    super.key,
+    this.level = 0,
+    required this.submissionId,
+    this.commentId,
+    this.message = 'Fetch more replies...',
+  });
 
   @override
   State<CommentCardMoreReplies> createState() => _CommentCardState();
@@ -77,8 +85,8 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'View more replies',
-                                style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                                widget.message,
+                                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer),
                               ),
                               isLoading
                                   ? const SizedBox(

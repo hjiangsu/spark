@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
@@ -56,8 +57,9 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
           children: children,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: CommentStatus.failure, comments: [], children: []));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 
@@ -78,8 +80,9 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
           children: children,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: CommentStatus.failure, comments: [], children: []));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 }

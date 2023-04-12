@@ -4,9 +4,11 @@ class ErrorMessage extends StatelessWidget {
   const ErrorMessage({
     super.key,
     required this.message,
+    this.icon,
   });
 
   final String message;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +19,11 @@ class ErrorMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(
-            Icons.warning_rounded,
+          Icon(
+            icon ?? Icons.warning_rounded,
             size: 100,
           ),
+          const SizedBox(height: 15),
           Text(
             message,
             style: theme.textTheme.titleMedium,

@@ -87,7 +87,7 @@ class _CommentCardState extends State<CommentCard> {
                           children: [
                             Text(
                               HtmlUnescape().convert(widget.comment.author),
-                              style: theme.textTheme.bodySmall?.copyWith(
+                              style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.onTertiaryContainer,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -97,14 +97,14 @@ class _CommentCardState extends State<CommentCard> {
                             const SizedBox(width: 2.0),
                             Text(
                               HtmlUnescape().convert(formatNumberToK(widget.comment.upvotes)),
-                              style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface),
+                              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface),
                             ),
                           ],
                         ),
                       ),
                       Text(
                         formatTimeToString(epochTime: widget.comment.createdAt.toInt()),
-                        style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onBackground),
+                        style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onBackground),
                       )
                     ],
                   ),

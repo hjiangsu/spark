@@ -24,3 +24,9 @@ class AppBarActionChanged extends SparkEvent {
 
   const AppBarActionChanged({required this.actions});
 }
+
+class ActivePageChanged extends SparkEvent {
+  final AppMenu appMenu;
+
+  const ActivePageChanged({required this.appMenu});
+}

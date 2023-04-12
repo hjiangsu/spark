@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -66,8 +67,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           category: state.category,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: FeedStatus.failure, posts: []));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 
@@ -181,7 +183,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       if (event.subreddit == null) {
         subredditName = null;
       } else {
-        subredditName = posts.first.subreddit;
+        subredditName = posts.isNotEmpty ? posts.first.subreddit : event.subreddit;
       }
 
       return emit(
@@ -196,8 +198,9 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           category: event.category,
         ),
       );
-    } catch (_) {
+    } catch (e, s) {
       emit(state.copyWith(status: FeedStatus.failure, posts: []));
+      Sentry.captureException(e, stackTrace: s);
     }
   }
 }
