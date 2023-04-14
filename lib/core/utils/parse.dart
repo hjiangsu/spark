@@ -26,17 +26,30 @@ Size _getScaledMediaSize({width, height, offset = 24.0}) {
 /// Given a url for a valid image, determine the width and height of the image.
 Future<Size> _calculateImageDimension(String url) {
   Completer<Size> completer = Completer();
-  Image image = Image(image: CachedNetworkImageProvider(url));
 
-  image.image.resolve(const ImageConfiguration()).addListener(
-    ImageStreamListener(
-      (ImageInfo image, bool synchronousCall) {
-        dynamic myImage = image.image;
-        Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
-        if (completer.isCompleted == false) completer.complete(size);
-      },
-    ),
-  );
+  try {
+    Image image = Image(
+      image: CachedNetworkImageProvider(
+        url,
+        errorListener: () {
+          Size size = const Size(0, 0);
+          completer.completeError(size);
+        },
+      ),
+    );
+
+    image.image.resolve(const ImageConfiguration()).addListener(
+      ImageStreamListener(
+        (ImageInfo image, bool synchronousCall) {
+          dynamic myImage = image.image;
+          Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
+          if (completer.isCompleted == false) completer.complete(size);
+        },
+      ),
+    );
+  } catch (e) {
+    print(e);
+  }
 
   return completer.future;
 }
@@ -69,17 +82,22 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
 
     mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
   } else if (overriddenURL.startsWith("https://i.redd.it")) {
-    // Handle internal reddit image/media links
-    isImage = true;
+    try {
+      // Handle internal reddit image/media links
+      isImage = true;
 
-    String mediaLink = overriddenURL;
-    Size imageDimensions = await _calculateImageDimension(overriddenURL);
-    double originalHeight = imageDimensions.height;
-    double originalWidth = imageDimensions.width;
+      String mediaLink = overriddenURL;
+      Size imageDimensions = await _calculateImageDimension(overriddenURL);
+      double originalHeight = imageDimensions.height;
+      double originalWidth = imageDimensions.width;
 
-    Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
+      Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
-    mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+      mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+    } catch (e) {
+      isImage = false; // Reset this to false since we encountered an error
+      print(e);
+    }
   } else if (overriddenURL.startsWith("https://www.reddit.com/gallery/")) {
     try {
       // Handle reddit gallery links
@@ -95,6 +113,7 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
         mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
       });
     } catch (e) {
+      isGallery = false; // Reset this to false since we encountered an error
       print(e);
     }
   } else {

@@ -51,9 +51,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       List<dynamic>? results;
 
       if (event.searchType == SearchType.subreddit) {
-        results = await search.search(subredditQuery: event.query, nsfw: true);
+        results = await search.search(subredditQuery: event.query, nsfw: false);
       } else if (event.searchType == SearchType.user) {
-        results = await search.search(userQuery: event.query, nsfw: true);
+        results = await search.search(userQuery: event.query, nsfw: false);
       }
 
       if (results == null || results.isEmpty) {

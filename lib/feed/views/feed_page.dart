@@ -149,7 +149,6 @@ class _FeedPageState extends State<FeedPage> {
             },
             onLongPress: () {
               HapticFeedback.heavyImpact();
-              context.read<FeedBloc>().add(FeedRefreshed(subreddit: "randnsfw"));
             },
             child: const Icon(Icons.shuffle_rounded),
           ),

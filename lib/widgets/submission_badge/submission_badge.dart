@@ -10,6 +10,7 @@ class SubmissionBadge extends StatelessWidget {
     super.key,
     this.label,
     this.icon,
+    this.fontSize,
     required this.lightThemeColor,
     required this.darkThemeColor,
   });
@@ -18,6 +19,7 @@ class SubmissionBadge extends StatelessWidget {
   final Icon? icon;
   final Color lightThemeColor;
   final Color darkThemeColor;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class SubmissionBadge extends StatelessWidget {
           badgeContent: (label != null)
               ? Text(
                   label!,
-                  style: theme.textTheme.labelMedium?.copyWith(fontSize: 12),
+                  style: theme.textTheme.labelMedium?.copyWith(fontSize: fontSize ?? 12),
                 )
               : (icon != null)
                   ? icon
