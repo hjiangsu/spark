@@ -7,21 +7,25 @@ class ThemeState extends Equatable {
     this.status = ThemeStatus.loading,
     this.useDarkTheme = true,
     this.colorSchemeSeed = Colors.blueGrey,
+    this.fontSizeScale = 1.0,
   });
 
   final ThemeStatus status;
   final bool useDarkTheme;
   final MaterialColor colorSchemeSeed;
+  final double fontSizeScale;
 
   ThemeState copyWith({
     ThemeStatus? status,
     bool? useDarkTheme,
     MaterialColor? colorSchemeSeed,
+    double? fontSizeScale,
   }) {
     return ThemeState(
       status: status ?? this.status,
       useDarkTheme: useDarkTheme ?? true,
       colorSchemeSeed: colorSchemeSeed ?? Colors.blueGrey,
+      fontSizeScale: fontSizeScale ?? this.fontSizeScale,
     );
   }
 
@@ -29,5 +33,5 @@ class ThemeState extends Equatable {
   String toString() => '''ThemeState { status: $status, useDarkTheme: $useDarkTheme }''';
 
   @override
-  List<dynamic> get props => [status, useDarkTheme, colorSchemeSeed];
+  List<dynamic> get props => [status, useDarkTheme, colorSchemeSeed, fontSizeScale];
 }

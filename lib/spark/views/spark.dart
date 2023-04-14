@@ -8,6 +8,7 @@ import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
 import 'package:spark/search/bloc/search_bloc.dart';
 import 'package:spark/search/views/search_page.dart';
+import 'package:spark/settings/views/settings_page.dart';
 import 'package:spark/spark/bloc/spark_bloc.dart';
 import 'package:spark/widgets/bottom_app_bar/bottom_app_bar.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
@@ -101,7 +102,7 @@ class _SparkState extends State<Spark> {
                             const SearchPage(),
                             Center(child: Container(child: const Text('Messages Page'))),
                             Center(child: Container(child: const Text('Account Page'))),
-                            Center(child: Container(child: const Text('Settings Page'))),
+                            const SettingsPage(),
                           ],
                         ),
                         bottomNavigationBar: ActionBar(activePage: _page),

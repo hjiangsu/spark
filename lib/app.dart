@@ -22,6 +22,8 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocProvider<ThemeBloc>(
       create: (context) => ThemeBloc(),
       child: BlocBuilder<ThemeBloc, ThemeState>(
@@ -31,6 +33,8 @@ class _AppState extends State<App> {
               context.read<ThemeBloc>().add(ThemeRefreshed());
               return const Center(child: CircularProgressIndicator());
             case ThemeStatus.success:
+              print('font scale: ${state.fontSizeScale}');
+
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 themeMode: state.useDarkTheme ? ThemeMode.dark : ThemeMode.light,
@@ -42,6 +46,13 @@ class _AppState extends State<App> {
                   useMaterial3: true,
                   brightness: Brightness.light,
                   colorSchemeSeed: state.colorSchemeSeed,
+                  // textTheme: TextTheme(
+                  //   bodyMedium: theme.textTheme.bodyMedium!.copyWith(fontSize: theme.textTheme.bodyMedium!.fontSize! * state.fontSizeScale),
+                  //   titleMedium: TextStyle(),
+                  //   titleLarge: TextStyle(),
+                  //   labelMedium: TextStyle(),
+                  //   labelLarge: TextStyle(),
+                  // ),
                 ),
                 darkTheme: ThemeData(
                   useMaterial3: true,

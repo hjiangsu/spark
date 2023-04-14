@@ -81,7 +81,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     _chewie = ChewieController(
       looping: true,
       showControlsOnInitialize: false,
-      showControls: widget.showControls,
+      showControls: true,
       videoPlayerController: _controller!,
       aspectRatio: aspectRatio,
       allowPlaybackSpeedChanging: false,
@@ -117,6 +117,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           if (widget.nsfw && blur) {
             setState(() => blur = false);
           }
+          (_controller != null && _controller!.value.isPlaying) ? _controller?.pause() : _controller?.play();
         },
         child: Stack(
           children: [

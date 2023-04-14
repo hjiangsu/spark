@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/core/enums/category_options.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
@@ -130,15 +129,6 @@ class _FeedPageState extends State<FeedPage> {
               context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
             },
             icon: const Icon(Icons.home_rounded),
-          ),
-          IconButton(
-            onPressed: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
-              await prefs.setBool('useDarkTheme', !useDarkTheme);
-              context.read<ThemeBloc>().add(ThemeRefreshed());
-            },
-            icon: const Icon(Icons.dark_mode_outlined),
           ),
           const SizedBox(width: 8.0),
           InkResponse(

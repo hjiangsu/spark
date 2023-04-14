@@ -21,6 +21,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
       final prefs = await SharedPreferences.getInstance();
       bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
       String? colorScheme = prefs.getString('colorScheme');
+      double? fontSizeScale = prefs.getDouble('fontSize');
 
       MaterialColor colorSchemeSeed = Colors.blueGrey;
 
@@ -88,11 +89,14 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           break;
       }
 
+      print(fontSizeScale);
+
       return emit(
         state.copyWith(
           status: ThemeStatus.success,
           colorSchemeSeed: colorSchemeSeed,
           useDarkTheme: useDarkTheme,
+          fontSizeScale: fontSizeScale != null ? (4 * (fontSizeScale / 4)) : 1.0,
         ),
       );
     } catch (e, s) {

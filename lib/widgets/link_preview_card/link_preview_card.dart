@@ -48,7 +48,7 @@ class LinkPreviewCard extends StatelessWidget {
                       child: Text(
                         originURL!,
                         overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyText2!.copyWith(
+                        style: theme.textTheme.bodyMedium!.copyWith(
                           color: Colors.white60,
                         ),
                       ),

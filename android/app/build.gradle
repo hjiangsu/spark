@@ -67,5 +67,6 @@ flutter {
 }
 
 dependencies {
+    implementation 'androidx.activity:activity:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

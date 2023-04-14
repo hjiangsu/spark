@@ -21,6 +21,7 @@ class PostHeading extends StatelessWidget {
     final theme = Theme.of(context);
     final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
 
+    print(theme.textTheme.bodyMedium!.fontSize);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(
