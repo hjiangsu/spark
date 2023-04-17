@@ -40,6 +40,8 @@ class _SparkState extends State<Spark> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (context) => AuthBloc(reddit: RedditClient.instance)),
@@ -87,7 +89,7 @@ class _SparkState extends State<Spark> {
                             : AppBar(
                                 toolbarHeight: 70.0,
                                 centerTitle: false,
-                                title: Text(state.appBarInformation.title),
+                                title: Text(state.appBarInformation.title, style: theme.textTheme.headlineSmall),
                                 actions: state.appBarInformation.actions,
                               ),
                         body: PageView(

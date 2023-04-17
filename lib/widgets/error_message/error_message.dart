@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class ErrorMessage extends StatelessWidget {
   const ErrorMessage({
@@ -13,6 +15,7 @@ class ErrorMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     return IntrinsicHeight(
       child: Column(

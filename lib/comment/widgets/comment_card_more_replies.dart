@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spark/comment/bloc/comment_bloc.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class CommentCardMoreReplies extends StatefulWidget {
   int level;
@@ -44,6 +45,7 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     return Container(
       decoration: BoxDecoration(
@@ -86,7 +88,9 @@ class _CommentCardState extends State<CommentCardMoreReplies> {
                             children: [
                               Text(
                                 widget.message,
-                                style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onPrimaryContainer,
+                                ),
                               ),
                               isLoading
                                   ? const SizedBox(

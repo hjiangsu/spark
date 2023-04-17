@@ -96,7 +96,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
           status: ThemeStatus.success,
           colorSchemeSeed: colorSchemeSeed,
           useDarkTheme: useDarkTheme,
-          fontSizeScale: fontSizeScale != null ? (4 * (fontSizeScale / 4)) : 1.0,
+          fontSizeScale: fontSizeScale != null ? (fontSizeScale / 250) : 1.0,
         ),
       );
     } catch (e, s) {

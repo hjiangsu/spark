@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,6 +20,7 @@ class LinkPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     if (originURL != null && originURL!.startsWith('https://www.reddit.com')) {
       return Container();

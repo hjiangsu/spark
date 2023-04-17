@@ -31,7 +31,7 @@ dependencies:
   reddit:
     git:
       url: git@github.com:hjiangsu/reddit-dart.git
-      ref: v0.1.14-alpha
+      ref: v0.1.16-alpha
   imgur:
     git:
       url: git@github.com:hjiangsu/imgur-dart.git

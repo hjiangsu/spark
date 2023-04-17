@@ -40,7 +40,7 @@ class SubmissionBadge extends StatelessWidget {
           badgeContent: (label != null)
               ? Text(
                   label!,
-                  style: theme.textTheme.labelMedium?.copyWith(fontSize: fontSize ?? 12),
+                  style: theme.textTheme.labelMedium?.copyWith(fontSize: fontSize ?? theme.textTheme.labelMedium!.fontSize),
                 )
               : (icon != null)
                   ? icon

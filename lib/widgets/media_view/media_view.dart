@@ -1,20 +1,24 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:video_player/video_player.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
 import 'package:spark/core/models/media/media.dart';
-import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/widgets/image_preview/image_preview.dart';
 import 'package:spark/widgets/link_preview_card/link_preview_card.dart';
-import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
+import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/widgets/video_player/video_player.dart' as CustomVideoPlayer;
 
 class MediaView extends StatefulWidget {
   MediaView({
     super.key,
     required this.post,
+    this.showVideoControls = false,
   });
 
   RedditSubmission post;
+  bool showVideoControls;
 
   @override
   State<MediaView> createState() => _MediaViewState();
@@ -46,17 +50,14 @@ class _MediaViewState extends State<MediaView> {
                 }
               },
               child: CustomVideoPlayer.VideoPlayer(
-                videoUrl: url,
-                urlKey: Key(url),
+                url: url,
+                playerKey: Key(url),
+                showControls: widget.showVideoControls,
                 width: widget.post.video?.width?.toDouble(),
                 height: widget.post.video?.height?.toDouble(),
-                // ratio: post.mediaRatio?.toDouble(),
-                // authorization: post.mediaInformation?['media'][0]['auth'],
                 onVideoInitialized: (VideoPlayerController _videoController) => setState(() {
                   videoController = _videoController;
                 }),
-                // nsfw: (post.nsfw == true && blurNSFW),
-                nsfw: false,
               ),
             ),
           ),
@@ -67,6 +68,7 @@ class _MediaViewState extends State<MediaView> {
     // Display a carousel of images for galleries
     if (widget.post.gallery != null) {
       List<Media> media = widget.post.gallery!;
+
       return CarouselSlider(
         options: CarouselOptions(
           enableInfiniteScroll: false,

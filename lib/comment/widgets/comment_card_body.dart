@@ -17,7 +17,7 @@ class CommentCardBody extends StatelessWidget {
       child: MarkdownBody(
         data: HtmlUnescape().convert(body),
         styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-            p: const TextStyle(fontSize: 14),
+            p: theme.textTheme.bodyMedium,
             blockquoteDecoration: const BoxDecoration(
               color: Colors.transparent,
               border: Border(left: BorderSide(color: Colors.grey, width: 4)),

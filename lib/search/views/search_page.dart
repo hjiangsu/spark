@@ -54,6 +54,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     return Column(
       children: [
@@ -134,7 +135,9 @@ class _SearchPageState extends State<SearchPage> {
                                         children: [
                                           Text(
                                             state.results[index].information['display_name_prefixed'],
-                                            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                                            style: theme.textTheme.bodyMedium?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                           state.results[index].information['over18'] == true
                                               ? const SubmissionBadge(
@@ -150,8 +153,8 @@ class _SearchPageState extends State<SearchPage> {
                                       AutoSizeText(
                                         state.results[index].information['public_description'].length > 0 ? state.results[index].information['public_description'] : 'No description available',
                                         maxLines: 2,
-                                        minFontSize: 14.0,
-                                        maxFontSize: 14.0,
+                                        minFontSize: theme.textTheme.bodyMedium!.fontSize!,
+                                        maxFontSize: theme.textTheme.bodyMedium!.fontSize!,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
@@ -186,7 +189,9 @@ class _SearchPageState extends State<SearchPage> {
                                           const SizedBox(width: 8.0),
                                           Text(
                                             state.results[index].information['name'],
-                                            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                                            style: theme.textTheme.bodyMedium?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -230,6 +235,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<Widget> appBarActions() {
+    final theme = Theme.of(context);
+
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -259,23 +266,29 @@ class _SearchPageState extends State<SearchPage> {
               resetTextField();
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<SearchType>>[
-              const PopupMenuItem<SearchType>(
+              PopupMenuItem<SearchType>(
                 value: SearchType.subreddit,
                 child: Row(
                   children: [
-                    Icon(Icons.dashboard_rounded, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('Subreddit'),
+                    const Icon(Icons.dashboard_rounded, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'Subreddit',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),
-              const PopupMenuItem<SearchType>(
+              PopupMenuItem<SearchType>(
                 value: SearchType.user,
                 child: Row(
                   children: [
-                    Icon(Icons.people, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('User'),
+                    const Icon(Icons.people, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'User',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:html_unescape/html_unescape.dart';
 
@@ -6,6 +7,7 @@ import 'package:spark/comment/widgets/comment_card_body.dart';
 import 'package:spark/comment/widgets/comment_card_more_replies.dart';
 
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 import 'package:spark/core/utils/datetime.dart';
 import 'package:spark/core/utils/numbers.dart';
 
@@ -53,6 +55,7 @@ class _CommentCardState extends State<CommentCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     return Container(
       decoration: BoxDecoration(
@@ -88,7 +91,7 @@ class _CommentCardState extends State<CommentCard> {
                             Text(
                               HtmlUnescape().convert(widget.comment.author),
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onTertiaryContainer,
+                                color: theme.colorScheme.onSecondaryContainer,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -97,14 +100,18 @@ class _CommentCardState extends State<CommentCard> {
                             const SizedBox(width: 2.0),
                             Text(
                               HtmlUnescape().convert(formatNumberToK(widget.comment.upvotes)),
-                              style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onBackground,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Text(
                         formatTimeToString(epochTime: widget.comment.createdAt.toInt()),
-                        style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onBackground),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onBackground,
+                        ),
                       )
                     ],
                   ),

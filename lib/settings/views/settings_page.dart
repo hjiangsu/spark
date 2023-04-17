@@ -24,6 +24,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SingleChildScrollView(
       child: ListView(
         shrinkWrap: true,
@@ -39,7 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             leading: const Icon(Icons.text_fields_rounded),
             trailing: const Icon(Icons.chevron_right_rounded),
-            title: const Text('Appearance'),
+            title: Text('Appearance', style: theme.textTheme.bodyMedium),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AppearanceSettingsPage()),
             ),

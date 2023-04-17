@@ -26,7 +26,6 @@ class _FeedPageState extends State<FeedPage> {
 
   @override
   void initState() {
-    print('helllloo');
     _scrollController.addListener(_onScroll);
     super.initState();
   }
@@ -59,52 +58,32 @@ class _FeedPageState extends State<FeedPage> {
             context.read<SparkBloc>().add(AppBarTitleChanged(title: state.displayName ?? ''));
             context.read<SparkBloc>().add(const AppBarVisibilityChanged(hideAppBar: false));
             context.read<SparkBloc>().add(AppBarActionChanged(actions: appBarActions()));
-            return RefreshIndicator(
-                onRefresh: () async {
-                  HapticFeedback.mediumImpact();
-                  context.read<FeedBloc>().add(FeedRefreshed(subreddit: state.subreddit, frontPage: state.frontPage, category: state.category));
-                },
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: state.posts.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index != state.posts.length) {
-                      return FeedCard(post: state.posts[index]);
-                    } else {
-                      return Column(
-                        children: [
-                          Divider(color: useDarkTheme ? Colors.grey.shade900 : Colors.grey.shade100),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16.0),
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                )
 
-                // InViewNotifierList(
-                //   addAutomaticKeepAlives: true,
-                //   controller: _scrollController,
-                //   isInViewPortCondition: (double deltaTop, double deltaBottom, double vpHeight) => deltaTop < (0.7 * vpHeight) && deltaBottom > (0.1 * vpHeight),
-                //   itemCount: state.subredditInstance != null ? state.posts.length + 1 : state.posts.length,
-                //   builder: (BuildContext context, int index) {
-                //     if (index == 0) {
-                //       return Column(
-                //         children: [
-                //           state.subredditInstance == null ? SearchAutocomplete(searchAll: enableExperimentalFeatures) : subredditDescriptionCard(subreddit: state.subredditInstance),
-                //         ],
-                //       );
-                //     }
-                //     return FeedPostCard(
-                //       post: state.posts[index - 1],
-                //       showExpandedMedia: showExpandedMedia,
-                //       index: index - 1,
-                //     );
-                //   },
-                // ),
-                );
+            return RefreshIndicator(
+              onRefresh: () async {
+                HapticFeedback.mediumImpact();
+                context.read<FeedBloc>().add(FeedRefreshed(subreddit: state.subreddit, frontPage: state.frontPage, category: state.category));
+              },
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: state.posts.length + 1,
+                itemBuilder: (context, index) {
+                  if (index != state.posts.length) {
+                    return FeedCard(post: state.posts[index]);
+                  } else {
+                    return Column(
+                      children: [
+                        Divider(color: useDarkTheme ? Colors.grey.shade900 : Colors.grey.shade100),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            );
           case FeedStatus.empty:
             return const ErrorMessage(
               message: 'No posts were found',
@@ -120,6 +99,8 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   List<Widget> appBarActions() {
+    final theme = Theme.of(context);
+
     return [
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -176,43 +157,55 @@ class _FeedPageState extends State<FeedPage> {
                   ));
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<CategoryOptions>>[
-              const PopupMenuItem<CategoryOptions>(
+              PopupMenuItem<CategoryOptions>(
                 value: CategoryOptions.best,
                 child: Row(
                   children: [
-                    Icon(Icons.rocket_launch_rounded, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('Best'),
+                    const Icon(Icons.rocket_launch_rounded, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'Best',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),
-              const PopupMenuItem<CategoryOptions>(
+              PopupMenuItem<CategoryOptions>(
                 value: CategoryOptions.hot,
                 child: Row(
                   children: [
-                    Icon(Icons.local_fire_department_rounded, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('Hot'),
+                    const Icon(Icons.local_fire_department_rounded, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'Hot',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),
-              const PopupMenuItem<CategoryOptions>(
+              PopupMenuItem<CategoryOptions>(
                 value: CategoryOptions.newest,
                 child: Row(
                   children: [
-                    Icon(Icons.auto_awesome_rounded, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('New'),
+                    const Icon(Icons.auto_awesome_rounded, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'New',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),
-              const PopupMenuItem<CategoryOptions>(
+              PopupMenuItem<CategoryOptions>(
                 value: CategoryOptions.rising,
                 child: Row(
                   children: [
-                    Icon(Icons.auto_graph_rounded, size: 20.0),
-                    SizedBox(width: 12.0),
-                    Text('Rising'),
+                    const Icon(Icons.auto_graph_rounded, size: 20.0),
+                    const SizedBox(width: 12.0),
+                    Text(
+                      'Rising',
+                      style: theme.textTheme.bodyLarge,
+                    ),
                   ],
                 ),
               ),

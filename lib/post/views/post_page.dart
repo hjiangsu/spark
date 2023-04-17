@@ -46,12 +46,15 @@ class PostPage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             PostHeading(post: state.post!),
-                            MediaView(post: state.post!),
+                            MediaView(
+                              post: state.post!,
+                              showVideoControls: true,
+                            ),
                             (state.post?.text == true)
                                 ? MarkdownBody(
                                     data: HtmlUnescape().convert(state.post!.description),
                                     styleSheet: MarkdownStyleSheet.fromTheme(theme).copyWith(
-                                      p: const TextStyle(fontSize: 14),
+                                      p: theme.textTheme.bodyMedium,
                                       blockquoteDecoration: const BoxDecoration(
                                         color: Colors.transparent,
                                         border: Border(left: BorderSide(color: Colors.grey, width: 4)),

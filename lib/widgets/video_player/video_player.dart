@@ -1,34 +1,29 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:video_player/video_player.dart';
+
 import 'package:chewie/chewie.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
+import 'package:video_player/video_player.dart';
 
 class VideoPlayer extends StatefulWidget {
   final Function(VideoPlayerController)? onVideoInitialized;
 
   const VideoPlayer({
-    required this.videoUrl,
-    required this.urlKey,
+    required this.url,
+    required this.playerKey,
     this.height,
     this.width,
-    this.authorization,
     this.showControls = false,
     this.onVideoInitialized,
-    this.ratio,
-    this.nsfw = false,
-  }) : super(key: urlKey);
+  }) : super(key: playerKey);
 
-  final Key urlKey;
+  final Key playerKey;
 
-  final String videoUrl;
+  final String url;
   final double? height;
   final double? width;
-  final double? ratio;
-  final String? authorization;
   final bool showControls;
-  final bool nsfw;
 
   @override
   State<VideoPlayer> createState() => _VideoPlayerState();
@@ -45,11 +40,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   void initState() {
     super.initState();
-    setState(() => blur = widget.nsfw);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initControllers(widget.videoUrl);
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initControllers(widget.url));
   }
 
   Future<void> _initControllers(String url) async {
@@ -63,14 +54,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
     } else {
       _controller = VideoPlayerController.network(
         url,
-        httpHeaders: widget.authorization != null
-            ? {
-                'content-Type': 'application/json',
-                'accept': 'application/json',
-                'authorization': 'Bearer ${widget.authorization}',
-                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-              }
-            : {},
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
       );
     }
@@ -81,7 +64,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     _chewie = ChewieController(
       looping: true,
       showControlsOnInitialize: false,
-      showControls: true,
+      showControls: widget.showControls,
       videoPlayerController: _controller!,
       aspectRatio: aspectRatio,
       allowPlaybackSpeedChanging: false,
@@ -93,9 +76,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
           child: CircularProgressIndicator(),
         ),
       ),
-      // overlay: GestureDetector(onTap: () => _controller.value.isPlaying ? _controller.pause() : _controller.play()
-      //     // child: IconButton(onPressed: () => _controller.play(), icon: Icon(Icons.play_arrow)),
-      //     ),
     );
     _chewie?.setVolume(0.0);
     if (widget.onVideoInitialized != null && _controller != null) widget.onVideoInitialized!(_controller!);
@@ -114,17 +94,18 @@ class _VideoPlayerState extends State<VideoPlayer> {
     if (_chewie != null) {
       return GestureDetector(
         onTap: () {
-          if (widget.nsfw && blur) {
-            setState(() => blur = false);
+          if (_controller != null && _controller!.value.isPlaying) {
+            _controller?.pause();
+          } else {
+            _controller?.play();
           }
-          (_controller != null && _controller!.value.isPlaying) ? _controller?.pause() : _controller?.play();
         },
         child: Stack(
           children: [
             Chewie(key: widget.key, controller: _chewie!),
             TweenAnimationBuilder<double>(
               tween: Tween<double>(begin: blur ? startBlur : endBlur, end: blur ? endBlur : startBlur),
-              duration: Duration(milliseconds: widget.nsfw ? 250 : 0),
+              duration: const Duration(milliseconds: 0),
               builder: (_, value, child) {
                 return BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: value, sigmaY: value),
@@ -143,10 +124,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
         height: widget.height,
         width: widget.width,
         color: Colors.grey.shade900,
-        child: Column(
+        child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
+          children: [
             CircularProgressIndicator(),
           ],
         ),

@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class ImagePreview extends StatefulWidget {
   final String url;
@@ -32,6 +34,7 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   void onImageTap() {
     final theme = Theme.of(context);
+    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     Navigator.push(context, MaterialPageRoute<void>(
       builder: (BuildContext context) {

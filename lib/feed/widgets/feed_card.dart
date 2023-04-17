@@ -28,12 +28,11 @@ class FeedCard extends StatefulWidget {
 class _FeedCardState extends State<FeedCard> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final useDarkTheme = context.read<ThemeBloc>().state.useDarkTheme;
 
     return Column(
       children: [
-        Divider(height: 1.0, color: useDarkTheme ? Colors.grey.shade900 : Colors.grey.shade100),
+        Divider(height: 1.0, color: useDarkTheme ? Colors.grey.shade800 : Colors.grey.shade100),
         InkWell(
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),

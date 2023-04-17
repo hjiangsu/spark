@@ -71,16 +71,21 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
     // This is most likely a sign that the post contains only text
     isText = true;
   } else if (overriddenURL.startsWith("https://v.redd.it")) {
-    // Handle internal reddit video links
-    isVideo = true;
+    try {
+      // Handle internal reddit video links
+      isVideo = true;
 
-    String mediaLink = submission.information["media"]["reddit_video"]["fallback_url"];
-    int originalHeight = submission.information["media"]["reddit_video"]["height"];
-    int originalWidth = submission.information["media"]["reddit_video"]["width"];
+      String mediaLink = submission.information["media"]["reddit_video"]["fallback_url"];
+      int originalHeight = submission.information["media"]["reddit_video"]["height"];
+      int originalWidth = submission.information["media"]["reddit_video"]["width"];
 
-    Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
+      Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
-    mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+      mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
+    } catch (e) {
+      isVideo = false; // Reset this to false since we encountered an error
+      print(e);
+    }
   } else if (overriddenURL.startsWith("https://i.redd.it")) {
     try {
       // Handle internal reddit image/media links
