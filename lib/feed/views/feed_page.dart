@@ -69,7 +69,10 @@ class _FeedPageState extends State<FeedPage> {
                 itemCount: state.posts.length + 1,
                 itemBuilder: (context, index) {
                   if (index != state.posts.length) {
-                    return FeedCard(post: state.posts[index]);
+                    return FeedCard(
+                      post: state.posts[index],
+                      showDivider: index != 0,
+                    );
                   } else {
                     return Column(
                       children: [

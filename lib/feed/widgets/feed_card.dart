@@ -16,9 +16,11 @@ class FeedCard extends StatefulWidget {
   const FeedCard({
     super.key,
     required this.post,
+    this.showDivider = true,
   });
 
   final RedditSubmission post;
+  final bool showDivider;
 
   @override
   State<FeedCard> createState() => _FeedCardState();
@@ -31,10 +33,10 @@ class _FeedCardState extends State<FeedCard> {
 
     return Column(
       children: [
-        Divider(height: 1.0, color: useDarkTheme ? Colors.grey.shade800 : Colors.grey.shade100),
+        widget.showDivider ? Divider(height: 1.0, color: useDarkTheme ? Colors.grey.shade800 : Colors.grey.shade100) : Container(),
         InkWell(
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
             child: IntrinsicHeight(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
