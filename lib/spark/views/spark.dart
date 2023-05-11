@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:pubnub/pubnub.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/account/views/account_page.dart';
 
 import 'package:spark/feed/feed.dart';
@@ -25,9 +31,50 @@ class _SparkState extends State<Spark> {
   int _page = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
+  dynamic pubnub;
+
+  Future<void> _initPubNub() async {
+    // Get device information
+    DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    dynamic deviceInfo = await deviceInfoPlugin.deviceInfo;
+
+    print(dotenv.env['PUBNUB_SUBSCRIBE_KEY']!);
+    // Initialize pubnub to be used to get notifications
+    final keyset = Keyset(
+      subscribeKey: dotenv.env['PUBNUB_SUBSCRIBE_KEY']!,
+      publishKey: dotenv.env['PUBNUB_PUBLISH_KEY']!,
+      userId: UserId(deviceInfo.identifierForVendor),
+    );
+
+    pubnub = PubNub(defaultKeyset: keyset);
+
+    // Set up pubnub subscription
+    Subscription subscription = pubnub.subscribe(channels: {dotenv.env['PUBNUB_CHANNEL']!});
+    subscription.messages.listen((envelope) async {
+      print('${envelope.uuid} sent a message: ${envelope.payload}');
+
+      // Store the authorization information into local storage
+      final prefs = await SharedPreferences.getInstance();
+      String encodedAuthorizationMap = json.encode(envelope.payload);
+      await prefs.setString('userAuthorization', encodedAuthorizationMap);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('User sucessfully authenticated')),
+      );
+    }, onError: (error) {
+      print(error);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initPubNub(); // Perform PubNub initialization
+    });
+
+    context.read<AuthBloc>().add(AuthChecked());
   }
 
   void onRouteChange(int pageIndex) {
@@ -45,7 +92,6 @@ class _SparkState extends State<Spark> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AuthBloc>(create: (context) => AuthBloc(reddit: RedditClient.instance)),
         BlocProvider<FeedBloc>(create: (context) => FeedBloc(reddit: RedditClient.instance)),
         BlocProvider<SearchBloc>(create: (context) => SearchBloc(reddit: RedditClient.instance)),
         BlocProvider<SparkBloc>(create: (context) => SparkBloc()),

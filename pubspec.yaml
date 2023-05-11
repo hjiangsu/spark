@@ -60,7 +60,10 @@ dependencies:
   flutter_markdown: ^0.6.14
   sentry_flutter: ^7.4.2
   flutter_launcher_icons: ^0.13.0
-
+  webview_flutter: ^4.2.0
+  webview_flutter_android: ^3.7.0
+  webview_flutter_wkwebview: ^3.4.3
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -107,9 +107,15 @@ class _FeedPageState extends State<FeedPage> {
         children: [
           IconButton(
             onPressed: () async {
-              context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
+              context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.home));
             },
             icon: const Icon(Icons.home_rounded),
+          ),
+          IconButton(
+            onPressed: () async {
+              context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
+            },
+            icon: const Icon(Icons.trending_up_rounded),
           ),
           const SizedBox(width: 8.0),
           InkResponse(

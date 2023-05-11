@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:spark/core/singletons/reddit_client.dart';
 
 import 'package:spark/spark/views/spark.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
+
+import 'core/auth/bloc/auth_bloc.dart';
 
 class CustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -24,8 +27,11 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocProvider<ThemeBloc>(
-      create: (context) => ThemeBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
+        BlocProvider<AuthBloc>(create: (context) => AuthBloc(reddit: RedditClient.instance)),
+      ],
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (context, state) {
           switch (state.status) {
@@ -33,7 +39,7 @@ class _AppState extends State<App> {
               context.read<ThemeBloc>().add(ThemeRefreshed());
               return const Center(child: CircularProgressIndicator());
             case ThemeStatus.success:
-              print('font scale: ${state.fontSizeScale}');
+              print('font scale: //${state.fontSizeScale}');
 
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
