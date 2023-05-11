@@ -25,7 +25,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
   bool isLoading = true;
 
   bool useDarkTheme = true;
-  String? colorScheme;
+  String? _colorScheme;
 
   double _fontSize = 250;
 
@@ -35,14 +35,14 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
     switch (attribute) {
       case 'useDarkTheme':
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        bool _useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
-        await prefs.setBool('useDarkTheme', !_useDarkTheme);
+        bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
+        await prefs.setBool('useDarkTheme', !useDarkTheme);
         setState(() => useDarkTheme = !useDarkTheme);
         context.read<ThemeBloc>().add(ThemeRefreshed());
         break;
       case 'colorScheme':
         prefs.setString('colorScheme', value);
-        setState(() => colorScheme = value);
+        setState(() => _colorScheme = value);
         context.read<ThemeBloc>().add(ThemeRefreshed());
         break;
       case 'fontSize':
@@ -58,7 +58,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
 
     setState(() {
       useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
-      colorScheme = prefs.getString('colorScheme') ?? "blueGrey";
+      _colorScheme = prefs.getString('colorScheme') ?? "blueGrey";
       _fontSize = prefs.getDouble('fontSize') ?? 250;
       isLoading = false;
     });
@@ -118,7 +118,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
       ColorSchemeOption(label: "Grey", value: "grey", color: Colors.grey),
     ];
 
-    ColorSchemeOption _colorScheme = colorSchemeOptions.firstWhere((element) => element.value == colorScheme);
+    ColorSchemeOption colorScheme = colorSchemeOptions.firstWhere((element) => element.value == _colorScheme);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -170,14 +170,14 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
               child: Row(
                 children: [
                   Text(
-                    _colorScheme.label,
-                    style: theme.textTheme.bodyMedium!.copyWith(color: _colorScheme.color),
+                    colorScheme.label,
+                    style: theme.textTheme.bodyMedium!.copyWith(color: colorScheme.color),
                   ),
                   const SizedBox(width: 12.0),
                   Container(
                     width: 25,
                     height: 25,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: _colorScheme.color),
+                    decoration: BoxDecoration(shape: BoxShape.circle, color: colorScheme.color),
                   ),
                 ],
               ),

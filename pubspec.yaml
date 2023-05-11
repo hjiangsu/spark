@@ -59,6 +59,7 @@ dependencies:
   chewie: ^1.4.0
   flutter_markdown: ^0.6.14
   sentry_flutter: ^7.4.2
+  flutter_launcher_icons: ^0.13.0
 
 dev_dependencies:
   flutter_test:

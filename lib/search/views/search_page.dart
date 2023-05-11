@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
 
     context.read<SparkBloc>().add(const AppBarTitleChanged(title: 'Global Search'));
-    context.read<SparkBloc>().add(AppBarActionChanged(actions: appBarActions()));
+    context.read<SparkBloc>().add(AppBarActionChanged(actions: []));
     context.read<SearchBloc>().add(SearchReset()); // Reset the search
 
     _controller = TextEditingController();

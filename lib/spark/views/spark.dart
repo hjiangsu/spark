@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spark/account/views/account_page.dart';
 
 import 'package:spark/feed/feed.dart';
 import 'package:spark/core/enums/app_menu_options.dart';
@@ -103,7 +104,7 @@ class _SparkState extends State<Spark> {
                             const FeedPage(),
                             const SearchPage(),
                             Center(child: Container(child: const Text('Messages Page'))),
-                            Center(child: Container(child: const Text('Account Page'))),
+                            const AccountPage(),
                             const SettingsPage(),
                           ],
                         ),

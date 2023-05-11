@@ -182,13 +182,13 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
 }
 
 dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
-  List<RedditComment> _comments = [];
-  if (comments == null) return _comments;
+  List<RedditComment> comments0 = [];
+  if (comments == null) return comments0;
 
   for (Comment comment in comments) {
-    List<dynamic> _children = comment.children ?? [];
+    List<dynamic> children = comment.children ?? [];
 
-    _comments.add(RedditComment(
+    comments0.add(RedditComment(
       id: comment.information["id"],
       authorId: comment.information["author_fullname"] ?? "",
       subredditId: comment.information["subreddit_id"],
@@ -198,9 +198,9 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
       upvotes: comment.information["ups"],
       createdAt: comment.information["created_utc"].toInt() ?? 0,
       replies: parseComments(comment.replies, submissionId: submissionId),
-      children: _children,
+      children: children,
     ));
   }
 
-  return _comments;
+  return comments0;
 }

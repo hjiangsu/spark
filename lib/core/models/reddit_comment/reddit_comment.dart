@@ -1,4 +1,3 @@
-import 'package:spark/core/models/media/media.dart';
 
 class RedditComment {
   RedditComment({

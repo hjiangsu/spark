@@ -42,10 +42,8 @@ class _ActionBarState extends State<ActionBar> {
 
     return BottomAppBar(
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           IconButton(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.dashboard_rounded,
               color: (widget.activePage == 0) ? theme.colorScheme.primary : null,
@@ -53,7 +51,6 @@ class _ActionBarState extends State<ActionBar> {
             onPressed: () => _onItemTapped(0),
           ),
           IconButton(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.search,
               color: (widget.activePage == 1) ? theme.colorScheme.primary : null,
@@ -61,7 +58,6 @@ class _ActionBarState extends State<ActionBar> {
             onPressed: () => _onItemTapped(1),
           ),
           IconButton(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.mail,
               color: (widget.activePage == 2) ? theme.colorScheme.primary : null,
@@ -69,7 +65,6 @@ class _ActionBarState extends State<ActionBar> {
             onPressed: () => _onItemTapped(2),
           ),
           IconButton(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.person,
               color: (widget.activePage == 3) ? theme.colorScheme.primary : null,
@@ -77,7 +72,6 @@ class _ActionBarState extends State<ActionBar> {
             onPressed: () => _onItemTapped(3),
           ),
           IconButton(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 4.0),
             icon: Icon(
               Icons.settings,
               color: (widget.activePage == 4) ? theme.colorScheme.primary : null,

@@ -8,6 +8,10 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:spark/app.dart';
 import 'package:spark/core/debug/spark_bloc_observer.dart';
 
+// To build for ios: flutter build ios --release
+// To build for android: flutter build apk
+// To upload debug symbols: flutter packages pub run sentry_dart_plugin
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

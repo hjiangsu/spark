@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:spark/settings/views/appearance_settings_page.dart';
 
-import 'package:spark/settings/views/developer_settings_page.dart';
-import 'package:spark/settings/views/general_settings_page.dart';
 import 'package:spark/spark/bloc/spark_bloc.dart';
 
 class SettingsPage extends StatefulWidget {

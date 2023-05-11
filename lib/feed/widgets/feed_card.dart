@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/post/views/post_page.dart';

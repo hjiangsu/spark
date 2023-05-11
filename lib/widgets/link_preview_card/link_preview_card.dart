@@ -10,9 +10,9 @@ class LinkPreviewCard extends StatelessWidget {
   final String? originURL;
 
   Future<void> _launchURL(url) async {
-    Uri _url = Uri.parse(url);
+    Uri url0 = Uri.parse(url);
 
-    if (!await launchUrl(_url)) {
+    if (!await launchUrl(url0)) {
       throw 'Could not launch $url';
     }
   }
