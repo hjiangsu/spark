@@ -6,6 +6,7 @@ import 'package:spark/feed/bloc/feed_bloc.dart';
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
 import 'package:spark/core/utils/datetime.dart';
+import 'package:spark/feed/feed.dart';
 
 class PostHeading extends StatelessWidget {
   const PostHeading({
@@ -36,7 +37,8 @@ class PostHeading extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () => context.read<FeedBloc>().add(FeedRefreshed(subreddit: post.subreddit)),
+                  // onTap: () => context.read<FeedBloc>().add(FeedRefreshed(subreddit: post.subreddit)),
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FeedPage(subreddit: post.subreddit))),
                   child: Text(
                     post.subreddit,
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -53,6 +55,7 @@ class PostHeading extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     // Navigator.push(context, MaterialPageRoute(builder: (context) => UserPage(username: widget.post.author!)));
+                    context.read<FeedBloc>().add(FeedRefreshed(subreddit: 'u_${post.author}'));
                   },
                   child: Text(
                     post.author,

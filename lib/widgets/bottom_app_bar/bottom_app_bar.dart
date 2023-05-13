@@ -1,39 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:spark/core/enums/app_menu_options.dart';
-import 'package:spark/spark/spark.dart';
+import 'package:go_router/go_router.dart';
 
 class ActionBar extends StatefulWidget {
-  const ActionBar({super.key, this.activePage = 0});
-
-  final int activePage;
+  const ActionBar({super.key});
 
   @override
   State<ActionBar> createState() => _ActionBarState();
 }
 
+class BottomAppBarItem {
+  const BottomAppBarItem({required this.initialLocation, required this.icon});
+
+  final String initialLocation;
+  final Widget icon;
+}
+
+const bottomAppBarItems = [
+  BottomAppBarItem(
+    initialLocation: '/feed',
+    icon: Icon(Icons.dashboard_rounded),
+  ),
+  BottomAppBarItem(
+    initialLocation: '/search',
+    icon: Icon(Icons.search),
+  ),
+  BottomAppBarItem(
+    initialLocation: '/mail',
+    icon: Icon(Icons.mail),
+  ),
+  BottomAppBarItem(
+    initialLocation: '/account',
+    icon: Icon(Icons.person),
+  ),
+  BottomAppBarItem(
+    initialLocation: '/settings',
+    icon: Icon(Icons.settings),
+  ),
+];
+
 class _ActionBarState extends State<ActionBar> {
-  void _onItemTapped(int index) {
-    setState(() {
-      switch (index) {
-        case 0:
-          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.feed));
-          break;
-        case 1:
-          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.search));
-          break;
-        case 2:
-          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.mail));
-          break;
-        case 3:
-          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.account));
-          break;
-        case 4:
-          context.read<SparkBloc>().add(const ActivePageChanged(appMenu: AppMenu.settings));
-          break;
-      }
-    });
+  int get _currentIndex => _locationToTabIndex(GoRouter.of(context).location);
+
+  // Fetches to corresponding index
+  int _locationToTabIndex(String location) {
+    final index = bottomAppBarItems.indexWhere((t) => location.startsWith(t.initialLocation));
+    return index < 0 ? 0 : index;
+  }
+
+  // Callback when a tab is tapped
+  void _onItemTapped(BuildContext context, int index) {
+    if (index != _currentIndex) {
+      GoRouter.of(context).go(bottomAppBarItems[index].initialLocation);
+      // context.go(bottomAppBarItems[index].initialLocation);
+    }
   }
 
   @override
@@ -42,43 +62,15 @@ class _ActionBarState extends State<ActionBar> {
 
     return BottomAppBar(
       child: Row(
-        children: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.dashboard_rounded,
-              color: (widget.activePage == 0) ? theme.colorScheme.primary : null,
-            ),
-            onPressed: () => _onItemTapped(0),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.search,
-              color: (widget.activePage == 1) ? theme.colorScheme.primary : null,
-            ),
-            onPressed: () => _onItemTapped(1),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.mail,
-              color: (widget.activePage == 2) ? theme.colorScheme.primary : null,
-            ),
-            onPressed: () => _onItemTapped(2),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.person,
-              color: (widget.activePage == 3) ? theme.colorScheme.primary : null,
-            ),
-            onPressed: () => _onItemTapped(3),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: (widget.activePage == 4) ? theme.colorScheme.primary : null,
-            ),
-            onPressed: () => _onItemTapped(4),
-          ),
-        ],
+        children: bottomAppBarItems.asMap().entries.map((entry) {
+          int index = entry.key;
+          BottomAppBarItem item = entry.value;
+
+          return IconButton(
+            icon: item.icon,
+            onPressed: () => _onItemTapped(context, index),
+          );
+        }).toList(),
       ),
     );
   }

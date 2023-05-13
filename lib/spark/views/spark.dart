@@ -38,7 +38,6 @@ class _SparkState extends State<Spark> {
     DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
     dynamic deviceInfo = await deviceInfoPlugin.deviceInfo;
 
-    print(dotenv.env['PUBNUB_SUBSCRIBE_KEY']!);
     // Initialize pubnub to be used to get notifications
     final keyset = Keyset(
       subscribeKey: dotenv.env['PUBNUB_SUBSCRIBE_KEY']!,
@@ -51,18 +50,12 @@ class _SparkState extends State<Spark> {
     // Set up pubnub subscription
     Subscription subscription = pubnub.subscribe(channels: {dotenv.env['PUBNUB_CHANNEL']!});
     subscription.messages.listen((envelope) async {
-      print('${envelope.uuid} sent a message: ${envelope.payload}');
-
       // Store the authorization information into local storage
       final prefs = await SharedPreferences.getInstance();
       String encodedAuthorizationMap = json.encode(envelope.payload);
       await prefs.setString('userAuthorization', encodedAuthorizationMap);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User sucessfully authenticated')),
-      );
-    }, onError: (error) {
-      print(error);
+      context.read<AuthBloc>().add(AuthChecked());
     });
   }
 
@@ -154,7 +147,6 @@ class _SparkState extends State<Spark> {
                             const SettingsPage(),
                           ],
                         ),
-                        bottomNavigationBar: ActionBar(activePage: _page),
                       );
                     },
                   );

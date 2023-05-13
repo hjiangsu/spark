@@ -183,7 +183,11 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       if (event.subreddit == null) {
         subredditName = null;
       } else {
-        subredditName = posts.isNotEmpty ? posts.first.subreddit : event.subreddit;
+        if (posts.isNotEmpty && event.subreddit!.startsWith('u_')) {
+          subredditName = event.subreddit;
+        } else {
+          subredditName = posts.isNotEmpty ? posts.first.subreddit : event.subreddit;
+        }
       }
 
       return emit(

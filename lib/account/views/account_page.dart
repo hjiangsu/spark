@@ -1,11 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
+
 import 'package:spark/core/singletons/reddit_client.dart';
-import 'package:spark/login/bloc/login_bloc.dart';
-import 'package:spark/login/views/login_page.dart';
+import 'package:spark/account/bloc/account_bloc.dart';
+import 'package:spark/core/utils/datetime.dart';
+import 'package:spark/core/utils/numbers.dart';
+import 'package:spark/login/login.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -15,6 +18,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
+  String defaultAvatar = 'https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png';
   @override
   void initState() {
     super.initState();
@@ -25,29 +29,133 @@ class _AccountPageState extends State<AccountPage> {
     final theme = Theme.of(context);
 
     return BlocProvider(
-      create: (context) => LoginBloc(reddit: RedditClient.instance),
-      child: BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Sign in to access your Reddit account',
-              style: theme.textTheme.titleMedium,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const LoginPage(),
+      create: (context) => AccountBloc(reddit: RedditClient.instance),
+      child: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          BlocProvider.of<AccountBloc>(context).add(AccountFetched(isUserAuthorized: state.isUserAuthorized));
+        },
+        child: BlocBuilder<AccountBloc, AccountState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case AccountStatus.initial:
+                BlocProvider.of<AccountBloc>(context).add(AccountFetched(isUserAuthorized: context.read<AuthBloc>().state.isUserAuthorized));
+                return const Center(child: CircularProgressIndicator());
+              case AccountStatus.loading:
+                return const Center(child: CircularProgressIndicator());
+              case AccountStatus.success:
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          foregroundImage: CachedNetworkImageProvider(state.accountInformation?.avatarIconImageURL ?? defaultAvatar),
+                          maxRadius: 70,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          state.accountInformation!.name,
+                          style: theme.textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${formatNumberToK(state.accountInformation?.totalKarma ?? 0)}  ·  ${formatTimeToString(epochTime: state.accountInformation?.createdAt ?? 0)}',
+                          style: theme.textTheme.labelMedium?.copyWith(color: theme.textTheme.labelMedium?.color?.withAlpha(200)),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          onPressed: () => {},
+                          child: const Text('Posts'),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          onPressed: () => {},
+                          child: const Text('Comments'),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                          onPressed: () => {},
+                          child: const Text('Saved'),
+                        ),
+                        // const SizedBox(height: 8),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: const Size.fromHeight(50),
+                        //   ),
+                        //   onPressed: () => {},
+                        //   child: const Text('Friends'),
+                        // ),
+                        // const SizedBox(height: 8),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: const Size.fromHeight(50),
+                        //   ),
+                        //   onPressed: () => {},
+                        //   child: const Text('Upvoted'),
+                        // ),
+                        // const SizedBox(height: 8),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: const Size.fromHeight(50),
+                        //   ),
+                        //   onPressed: () => {},
+                        //   child: const Text('Downvoted'),
+                        // ),
+                        // const SizedBox(height: 8),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: const Size.fromHeight(50),
+                        //   ),
+                        //   onPressed: () => {},
+                        //   child: const Text('Hidden'),
+                        // ),
+                        // const SizedBox(height: 8),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     minimumSize: const Size.fromHeight(50),
+                        //   ),
+                        //   onPressed: () => {},
+                        //   child: const Text('Trophies'),
+                        // ),
+                      ],
+                    ),
                   ),
                 );
-              },
-              child: const Text('Sign In with Reddit'),
-            )
-          ],
-        );
-      }),
+              case AccountStatus.failure:
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sign in to access your Reddit account',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 32),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+                      },
+                      child: const Text('Sign In with Reddit'),
+                    )
+                  ],
+                );
+            }
+          },
+        ),
+      ),
     );
   }
 }

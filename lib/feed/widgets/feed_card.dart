@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/post/views/post_page.dart';
@@ -91,8 +92,8 @@ class _FeedCardState extends State<FeedCard> {
               ),
             ),
           ),
-          onTap: () => {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostPage(postId: widget.post.id))),
+          onTap: () {
+            GoRouter.of(context).push('${GoRouter.of(context).location}/post/${widget.post.id}');
           },
         ),
       ],
