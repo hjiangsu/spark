@@ -1,9 +1,14 @@
+import 'dart:convert';
 import 'dart:ui';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pubnub/pubnub.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/account/account.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
 import 'package:spark/feed/feed.dart';
@@ -179,7 +184,6 @@ class _AppState extends State<App> {
                     displayLarge: Typography.whiteCupertino.displayLarge?.copyWith(fontSize: theme.textTheme.displayLarge!.fontSize! * state.fontSizeScale),
                   ),
                 ),
-                // home: const Spark(),
               );
             case ThemeStatus.failure:
               return Container();
