@@ -95,155 +95,151 @@ class _SearchPageState extends State<SearchPage> {
                 onChanged: (value) => context.read<SearchBloc>().add(SearchRefreshed(query: value, searchType: searchType)),
               ),
             ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    controller: _scrollController,
-                    child: Center(
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                switch (state.status) {
+                  case SearchStatus.initial:
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Icon(Icons.search_rounded, size: 80, color: theme.dividerColor),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Search for subreddits or users',
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleMedium?.copyWith(color: theme.dividerColor),
+                        )
+                      ],
+                    );
+                  case SearchStatus.loading:
+                  case SearchStatus.success:
+                    return Scrollbar(
+                      thumbVisibility: true,
+                      controller: _scrollController,
                       child: SingleChildScrollView(
                         controller: _scrollController,
-                        child: BlocBuilder<SearchBloc, SearchState>(
-                          builder: (context, state) {
-                            switch (state.status) {
-                              case SearchStatus.initial:
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.search_rounded,
-                                      size: 80,
-                                      color: theme.dividerColor,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      'Search for subreddits or users',
-                                      style: theme.textTheme.titleMedium?.copyWith(
-                                        color: theme.dividerColor,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            if (state.type == SearchType.subreddit) {
+                              return InkWell(
+                                onTap: () => {
+                                  GoRouter.of(context).push('/search/subreddit/${state.results[index].information['display_name']}'),
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 1.0, color: theme.dividerColor.withOpacity(0.2))),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            state.results[index].information['display_name_prefixed'],
+                                            style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+                                          ),
+                                          state.results[index].information['over18'] == true
+                                              ? const SubmissionBadge(
+                                                  label: 'NSFW',
+                                                  fontSize: 9,
+                                                  lightThemeColor: Color.fromARGB(255, 248, 194, 190),
+                                                  darkThemeColor: Color.fromARGB(255, 160, 53, 45),
+                                                )
+                                              : Container()
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                );
-                              case SearchStatus.loading:
-                              case SearchStatus.success:
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) {
-                                    if (state.type == SearchType.subreddit) {
-                                      return InkWell(
-                                        onTap: () => {
-                                          GoRouter.of(context).push('/search/subreddit/${state.results[index].information['display_name']}'),
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(bottom: BorderSide(width: 1.0, color: theme.dividerColor.withOpacity(0.2))),
+                                      const SizedBox(height: 8.0),
+                                      AutoSizeText(
+                                        state.results[index].information['public_description'].length > 0 ? state.results[index].information['public_description'] : 'No description available',
+                                        maxLines: 1,
+                                        minFontSize: theme.textTheme.bodySmall!.fontSize!,
+                                        maxFontSize: theme.textTheme.bodySmall!.fontSize!,
+                                        style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w300),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return InkWell(
+                                onTap: () => {
+                                  GoRouter.of(context).push('/search/redditor/${state.results[index].information['name']}'),
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(bottom: BorderSide(width: 1.0, color: theme.dividerColor.withOpacity(0.2))),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: theme.highlightColor,
+                                            foregroundImage: CachedNetworkImageProvider(
+                                              HtmlUnescape().convert(state.results[index].information['icon_img'] ?? "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png"),
+                                              maxHeight: 64,
+                                              maxWidth: 64,
+                                            ),
                                           ),
-                                          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    state.results[index].information['display_name_prefixed'],
-                                                    style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-                                                  ),
-                                                  state.results[index].information['over18'] == true
-                                                      ? const SubmissionBadge(
-                                                          label: 'NSFW',
-                                                          fontSize: 9,
-                                                          lightThemeColor: Color.fromARGB(255, 248, 194, 190),
-                                                          darkThemeColor: Color.fromARGB(255, 160, 53, 45),
-                                                        )
-                                                      : Container()
-                                                ],
+                                          const SizedBox(width: 8.0),
+                                          Text(
+                                            state.results[index].information['name'],
+                                            style: theme.textTheme.bodyMedium?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      state.results[index].information["subreddit"]?['over_18'] == true
+                                          ? const Padding(
+                                              padding: EdgeInsets.only(right: 8.0),
+                                              child: SubmissionBadge(
+                                                label: 'NSFW',
+                                                lightThemeColor: Color.fromARGB(255, 248, 194, 190),
+                                                darkThemeColor: Color.fromARGB(255, 160, 53, 45),
                                               ),
-                                              const SizedBox(height: 8.0),
-                                              AutoSizeText(
-                                                state.results[index].information['public_description'].length > 0 ? state.results[index].information['public_description'] : 'No description available',
-                                                maxLines: 1,
-                                                minFontSize: theme.textTheme.bodySmall!.fontSize!,
-                                                maxFontSize: theme.textTheme.bodySmall!.fontSize!,
-                                                style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w300),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return InkWell(
-                                        onTap: () => {
-                                          GoRouter.of(context).push('/search/redditor/${state.results[index].information['name']}'),
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border(bottom: BorderSide(width: 1.0, color: theme.dividerColor.withOpacity(0.2))),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  CircleAvatar(
-                                                    backgroundColor: theme.highlightColor,
-                                                    foregroundImage: CachedNetworkImageProvider(
-                                                      HtmlUnescape().convert(state.results[index].information['icon_img'] ?? "https://www.redditstatic.com/avatars/defaults/v2/avatar_default_1.png"),
-                                                      maxHeight: 64,
-                                                      maxWidth: 64,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8.0),
-                                                  Text(
-                                                    state.results[index].information['name'],
-                                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              state.results[index].information["subreddit"]?['over_18'] == true
-                                                  ? const Padding(
-                                                      padding: EdgeInsets.only(right: 8.0),
-                                                      child: SubmissionBadge(
-                                                        label: 'NSFW',
-                                                        lightThemeColor: Color.fromARGB(255, 248, 194, 190),
-                                                        darkThemeColor: Color.fromARGB(255, 160, 53, 45),
-                                                      ),
-                                                    )
-                                                  : Container()
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  itemCount: state.results.length,
-                                );
-                              case SearchStatus.empty:
-                                return const ErrorMessage(
-                                  message: 'No results found',
-                                  icon: Icons.not_interested_rounded,
-                                );
-                              case SearchStatus.failure:
-                                return const ErrorMessage(message: 'Oops, an unexpected error occurred.');
-                              default:
-                                return Container();
+                                            )
+                                          : Container()
+                                    ],
+                                  ),
+                                ),
+                              );
                             }
                           },
+                          itemCount: state.results.length,
                         ),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-              ],
+                    );
+                  case SearchStatus.empty:
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ErrorMessage(
+                          message: 'No results found',
+                          icon: Icons.not_interested_rounded,
+                        ),
+                      ],
+                    );
+                  case SearchStatus.failure:
+                    return const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        ErrorMessage(message: 'Oops, an unexpected error occurred.'),
+                      ],
+                    );
+                }
+              },
             ),
           );
         },

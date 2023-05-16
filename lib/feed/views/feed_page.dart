@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:spark/core/auth/bloc/auth_bloc.dart';
 
 import 'package:spark/core/enums/category_options.dart';
 import 'package:spark/core/enums/front_page_options.dart';
@@ -10,6 +12,7 @@ import 'package:spark/core/singletons/reddit_client.dart';
 
 import 'package:spark/feed/feed.dart';
 import 'package:spark/feed/widgets/feed_card_list.dart';
+import 'package:spark/feed/widgets/feed_drawer.dart';
 
 import 'package:spark/widgets/error_message/error_message.dart';
 
@@ -75,6 +78,7 @@ class _FeedPageState extends State<FeedPage> {
               ),
               actions: getAppBarActions(context, widget.subreddit == null),
             ),
+            drawer: FeedDrawer(frontPage: state.frontPage ?? FrontPage.home),
             body: getFeedBody(context, state.status, state),
           );
         },
@@ -90,23 +94,6 @@ class _FeedPageState extends State<FeedPage> {
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          isMainPage
-              ? IconButton(
-                  onPressed: () async {
-                    context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.home));
-                  },
-                  icon: const Icon(Icons.home_rounded),
-                )
-              : Container(),
-          isMainPage
-              ? IconButton(
-                  onPressed: () async {
-                    context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
-                  },
-                  icon: const Icon(Icons.trending_up_rounded),
-                )
-              : Container(),
-          const SizedBox(width: 8.0),
           isMainPage
               ? InkResponse(
                   radius: 20.0,

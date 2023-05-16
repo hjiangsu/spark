@@ -33,7 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
 
     try {
-      // First, perform anonymouse authorization with Reddit
+      // First, perform anonymous authorization with Reddit
       await reddit.authorize();
 
       // Retrieve any user authorization if it exists
@@ -43,14 +43,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       // Re-authenticate with user token if provided
       if (decodedAuthorizationMap != null) {
-        int now = DateTime.now().millisecondsSinceEpoch;
-        int expiration = decodedAuthorizationMap['expires_at_ms'];
+        await reddit.authorization?.reauthorize(refreshCredentials: decodedAuthorizationMap);
 
-        if (now > expiration) {
-          await reddit.authorization?.reauthorize(refreshCredentials: decodedAuthorizationMap);
-        } else {
-          await reddit.authorization?.setAuthorization(decodedAuthorizationMap);
-        }
+        // int now = DateTime.now().millisecondsSinceEpoch;
+        // int expiration = decodedAuthorizationMap['expires_at_ms'];
+
+        // if (now > expiration) {
+        //   await reddit.authorization?.reauthorize(refreshCredentials: decodedAuthorizationMap);
+        // } else {
+        //   await reddit.authorization?.setAuthorization(decodedAuthorizationMap);
+        // }
       }
 
       List<Subreddit> subscriptions = [];
