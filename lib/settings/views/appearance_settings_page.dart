@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -94,7 +96,6 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
 
   Widget appearanceSettings() {
     final theme = Theme.of(context);
-    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     List<ColorSchemeOption> colorSchemeOptions = <ColorSchemeOption>[
       ColorSchemeOption(label: "Pink", value: "pink", color: Colors.pink),
@@ -260,7 +261,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
               ],
             ),
             Slider(
-              value: _fontSize ?? 200.0,
+              value: _fontSize,
               min: 200,
               max: 400,
               divisions: 4,

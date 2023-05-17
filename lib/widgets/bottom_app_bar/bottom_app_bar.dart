@@ -58,8 +58,6 @@ class _ActionBarState extends State<ActionBar> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BottomAppBar(
       child: Row(
         children: bottomAppBarItems.asMap().entries.map((entry) {

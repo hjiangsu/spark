@@ -11,14 +11,14 @@ import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/widgets/video_player/video_player.dart' as CustomVideoPlayer;
 
 class MediaView extends StatefulWidget {
-  MediaView({
+  const MediaView({
     super.key,
     required this.post,
     this.showVideoControls = false,
   });
 
-  RedditSubmission post;
-  bool showVideoControls;
+  final RedditSubmission post;
+  final bool showVideoControls;
 
   @override
   State<MediaView> createState() => _MediaViewState();

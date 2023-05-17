@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
 class IconText extends StatelessWidget {
   const IconText({super.key, required this.leadingIcon, this.leadingIconColor, required this.text, this.suffixIcon, this.suffixIconColor, this.onTap, this.onDoubleTap});
@@ -19,7 +17,6 @@ class IconText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final fontSizeScale = context.read<ThemeBloc>().state.fontSizeScale;
 
     return IntrinsicHeight(
       child: Row(
