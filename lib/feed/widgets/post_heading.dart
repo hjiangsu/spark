@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/feed/bloc/feed_bloc.dart';
@@ -37,8 +38,9 @@ class PostHeading extends StatelessWidget {
             child: Row(
               children: [
                 GestureDetector(
-                  // onTap: () => context.read<FeedBloc>().add(FeedRefreshed(subreddit: post.subreddit)),
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FeedPage(subreddit: post.subreddit))),
+                  onTap: () {
+                    GoRouter.of(context).push('/feed/subreddit/${post.subreddit}');
+                  },
                   child: Text(
                     post.subreddit,
                     style: theme.textTheme.bodyMedium?.copyWith(

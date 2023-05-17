@@ -78,7 +78,7 @@ class _FeedPageState extends State<FeedPage> {
               ),
               actions: getAppBarActions(context, widget.subreddit == null),
             ),
-            drawer: FeedDrawer(frontPage: state.frontPage ?? FrontPage.home),
+            drawer: widget.subreddit == null ? FeedDrawer(frontPage: state.frontPage ?? FrontPage.home) : null,
             body: getFeedBody(context, state.status, state),
           );
         },

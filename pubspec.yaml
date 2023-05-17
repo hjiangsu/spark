@@ -31,7 +31,7 @@ dependencies:
   reddit:
     git:
       url: git@github.com:hjiangsu/reddit-dart.git
-      ref: v0.1.16-alpha
+      ref: v0.1.18-alpha
   imgur:
     git:
       url: git@github.com:hjiangsu/imgur-dart.git
@@ -64,6 +64,7 @@ dependencies:
   webview_flutter_android: ^3.7.0
   webview_flutter_wkwebview: ^3.4.3
   go_router: ^7.0.1
+  uuid: ^3.0.7
   
 dev_dependencies:
   flutter_test:

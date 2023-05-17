@@ -9,7 +9,7 @@ class RedditClient {
     clientId: dotenv.env['REDDIT_CLIENT_ID']!,
     clientSecret: "",
     userAgent: dotenv.env['REDDIT_CLIENT_USER_AGENT']!,
-    options: RedditOptions(callbackURL: dotenv.env['REDDIT_CLIENT_CALLBACK_URL']!),
+    options: RedditOptions(callbackURL: "${dotenv.env['REDDIT_CLIENT_CALLBACK_URL']!}/refresh"),
   );
 
   static final instance = RedditClient._().reddit;

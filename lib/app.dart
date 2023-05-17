@@ -42,9 +42,28 @@ final GoRouter _router = GoRouter(
       },
       routes: [
         GoRoute(
+          path: '/splash',
+          builder: (BuildContext context, GoRouterState state) {
+            return SizedBox(height: 30, width: 30, child: CircularProgressIndicator());
+          },
+        ),
+        GoRoute(
           path: '/feed',
+          redirect: (context, state) {
+            if (context.read<AuthBloc>().state.status == AuthStatus.success) {
+              return '/feed';
+            }
+
+            return '/splash';
+          },
           pageBuilder: (context, state) => const NoTransitionPage(child: FeedPage()),
           routes: <RouteBase>[
+            GoRoute(
+              path: 'subreddit/:id',
+              builder: (BuildContext context, GoRouterState state) {
+                return FeedPage(subreddit: state.pathParameters['id']!);
+              },
+            ),
             GoRoute(
               path: 'post/:id',
               builder: (BuildContext context, GoRouterState state) {

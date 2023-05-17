@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import 'package:reddit/reddit.dart';
+import 'package:uuid/uuid.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -33,11 +34,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(status: AuthStatus.loading));
 
     try {
+      // Retrieve user uuid
+      final prefs = await SharedPreferences.getInstance();
+      String? userUuid = prefs.getString('userUuid');
+
+      print(userUuid);
+      if (userUuid == null || userUuid.isEmpty) {
+        // Generate a user uuid
+        Uuid uuid = const Uuid();
+        userUuid = uuid.v4();
+
+        // Set the userUuid to local storage
+        await prefs.setString('userUuid', userUuid);
+      }
+
       // First, perform anonymous authorization with Reddit
-      await reddit.authorize();
+      await reddit.authorize(userUuid: userUuid);
 
       // Retrieve any user authorization if it exists
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       String? encodedAuthorizationMap = prefs.getString('userAuthorization');
       Map<String, dynamic>? decodedAuthorizationMap = (encodedAuthorizationMap != null) ? json.decode(encodedAuthorizationMap) : null;
 

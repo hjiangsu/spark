@@ -781,8 +781,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.16-alpha"
-      resolved-ref: "8b4f92e1820d68b8827330b3a02c98986f7f4819"
+      ref: "v0.1.18-alpha"
+      resolved-ref: "0c7397bf292e517e1fcae048c42103577562f0f8"
       url: "git@github.com:hjiangsu/reddit-dart.git"
     source: git
     version: "0.1.11-alpha"
@@ -1104,7 +1104,7 @@ packages:
     source: hosted
     version: "3.0.4"
   uuid:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: uuid
       sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
