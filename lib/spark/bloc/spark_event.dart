@@ -7,26 +7,8 @@ abstract class SparkEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AppBarTitleChanged extends SparkEvent {
-  final String title;
+class ScaffoldKeyChanged extends SparkEvent {
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  const AppBarTitleChanged({required this.title});
-}
-
-class AppBarVisibilityChanged extends SparkEvent {
-  final bool hideAppBar;
-
-  const AppBarVisibilityChanged({required this.hideAppBar});
-}
-
-class AppBarActionChanged extends SparkEvent {
-  final List<Widget> actions;
-
-  const AppBarActionChanged({required this.actions});
-}
-
-class ActivePageChanged extends SparkEvent {
-  final AppMenu appMenu;
-
-  const ActivePageChanged({required this.appMenu});
+  const ScaffoldKeyChanged({required this.scaffoldKey});
 }

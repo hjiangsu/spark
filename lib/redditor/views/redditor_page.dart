@@ -1,15 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:spark/core/enums/category_options.dart';
-import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
 
-import 'package:spark/feed/feed.dart';
-import 'package:spark/feed/widgets/feed_card_list.dart';
 import 'package:spark/redditor/bloc/redditor_bloc.dart';
 import 'package:spark/redditor/widgets/redditor_feed_card_list.dart';
 
@@ -41,7 +36,7 @@ class _RedditorPageState extends State<RedditorPage> {
                 widget.username,
                 style: theme.textTheme.titleLarge,
               ),
-              actions: [],
+              actions: const [],
             ),
             body: getRedditorSubmissionBody(context, state.status, state),
           );

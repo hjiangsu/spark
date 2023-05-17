@@ -1,39 +1,29 @@
 part of 'spark_bloc.dart';
 
-enum SparkStatus { loading, success }
+enum SparkStatus { initial, loading, success, failure }
 
 class SparkState extends Equatable {
-  SparkState({
-    this.status = SparkStatus.loading,
-    required this.appBarInformation,
-    this.activePage = AppMenu.feed,
+  const SparkState({
+    this.status = SparkStatus.initial,
+    this.scaffoldKey,
   });
 
   final SparkStatus status;
-  final AppMenu activePage;
-
-  // App bar related state
-  AppBarInformation appBarInformation = AppBarInformation();
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   SparkState copyWith({
     SparkStatus? status,
-    AppBarInformation? appBarInformation,
-    AppMenu? activePage,
+    GlobalKey<ScaffoldState>? scaffoldKey,
   }) {
     return SparkState(
       status: status ?? this.status,
-      appBarInformation: appBarInformation ?? this.appBarInformation,
-      activePage: activePage ?? this.activePage,
+      scaffoldKey: scaffoldKey ?? this.scaffoldKey,
     );
   }
 
   @override
-  String toString() => '''SparkState { status: $status, title: ${appBarInformation.title}, hidden: ${appBarInformation.hidden} }''';
+  String toString() => '''SparkState { status: $status }''';
 
   @override
-  List<dynamic> get props => [status, appBarInformation, activePage];
-}
-
-class SparkInitial extends SparkState {
-  SparkInitial() : super(appBarInformation: AppBarInformation(), activePage: AppMenu.feed);
+  List<dynamic> get props => [status, scaffoldKey];
 }

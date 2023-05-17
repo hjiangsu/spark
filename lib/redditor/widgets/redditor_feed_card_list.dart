@@ -4,11 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
-import 'package:spark/core/enums/category_options.dart';
-import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 
-import 'package:spark/feed/feed.dart';
 import 'package:spark/feed/widgets/feed_card.dart';
 import 'package:spark/redditor/bloc/redditor_bloc.dart';
 

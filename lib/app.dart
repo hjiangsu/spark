@@ -1,14 +1,8 @@
-import 'dart:convert';
 import 'dart:ui';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pubnub/pubnub.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/account/account.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
 import 'package:spark/feed/feed.dart';
@@ -17,8 +11,8 @@ import 'package:spark/redditor/views/redditor_page.dart';
 import 'package:spark/search/views/search_page.dart';
 import 'package:spark/settings/views/settings_page.dart';
 
-import 'package:spark/spark/views/spark.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
+import 'package:spark/spark/bloc/spark_bloc.dart';
 import 'package:spark/widgets/scaffold_nav_bar/scaffold_nav_bar.dart';
 
 import 'core/auth/bloc/auth_bloc.dart';
@@ -42,20 +36,7 @@ final GoRouter _router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/splash',
-          builder: (BuildContext context, GoRouterState state) {
-            return SizedBox(height: 30, width: 30, child: CircularProgressIndicator());
-          },
-        ),
-        GoRoute(
           path: '/feed',
-          redirect: (context, state) {
-            if (context.read<AuthBloc>().state.status == AuthStatus.success) {
-              return '/feed';
-            }
-
-            return '/splash';
-          },
           pageBuilder: (context, state) => const NoTransitionPage(child: FeedPage()),
           routes: <RouteBase>[
             GoRoute(
@@ -87,7 +68,7 @@ final GoRouter _router = GoRouter(
                     builder: (BuildContext context, GoRouterState state) {
                       return PostPage(postId: state.pathParameters['id']!);
                     },
-                    routes: <RouteBase>[]),
+                    routes: const <RouteBase>[]),
               ],
             ),
             GoRoute(
@@ -102,7 +83,7 @@ final GoRouter _router = GoRouter(
                     builder: (BuildContext context, GoRouterState state) {
                       return PostPage(postId: state.pathParameters['id']!);
                     },
-                    routes: <RouteBase>[]),
+                    routes: const <RouteBase>[]),
               ],
             ),
           ],
@@ -142,6 +123,7 @@ class _AppState extends State<App> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeBloc>(create: (context) => ThemeBloc()),
+        BlocProvider<SparkBloc>(create: (context) => SparkBloc(const SparkState(status: SparkStatus.initial))),
         BlocProvider<AuthBloc>(create: (context) => AuthBloc(reddit: RedditClient.instance)),
       ],
       child: BlocBuilder<ThemeBloc, ThemeState>(

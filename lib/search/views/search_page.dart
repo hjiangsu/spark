@@ -4,14 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:go_router/go_router.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:spark/core/enums/app_menu_options.dart';
 import 'package:spark/core/enums/search_types.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
-import 'package:spark/feed/feed.dart';
 
-import 'package:spark/spark/bloc/spark_bloc.dart';
 import 'package:spark/search/bloc/search_bloc.dart';
-import 'package:spark/core/theme/bloc/theme_bloc.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
 import 'package:spark/widgets/submission_badge/submission_badge.dart';
 

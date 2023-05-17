@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -9,8 +8,10 @@ import 'package:pubnub/pubnub.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/feed/widgets/feed_drawer.dart';
+import 'package:spark/spark/spark.dart';
 
 import 'package:spark/widgets/bottom_app_bar/bottom_app_bar.dart';
+import 'package:spark/widgets/error_message/error_message.dart';
 import 'package:uuid/uuid.dart';
 
 // const tabs = [
@@ -36,6 +37,7 @@ class ScaffoldNavBar extends StatefulWidget {
 
 class _ScaffoldNavBarState extends State<ScaffoldNavBar> {
   dynamic pubnub;
+  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
 
   Future<void> _initPubNub() async {
     Uuid uuid = const Uuid();
@@ -79,21 +81,32 @@ class _ScaffoldNavBarState extends State<ScaffoldNavBar> {
     });
 
     context.read<AuthBloc>().add(AuthChecked());
+    context.read<SparkBloc>().add(ScaffoldKeyChanged(scaffoldKey: scaffoldKey));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state.status == AuthStatus.success) {
-          GoRouter.of(context).go('/feed');
+    print(GoRouter.of(context).location);
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) => {
+        if (state.status == AuthStatus.success) {GoRouter.of(context).go('/feed')}
+      },
+      builder: (context, state) {
+        switch (state.status) {
+          case AuthStatus.initial:
+          case AuthStatus.loading:
+            return const Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
+          case AuthStatus.success:
+            return Scaffold(
+              key: scaffoldKey,
+              body: widget.child,
+              drawer: GoRouter.of(context).location == '/feed' ? const FeedDrawer() : null,
+              bottomNavigationBar: const ActionBar(),
+            );
+          case AuthStatus.failure:
+            return const ErrorMessage(message: 'Something went wrong');
         }
       },
-      child: Scaffold(
-        body: widget.child,
-        drawer: FeedDrawer(),
-        bottomNavigationBar: ActionBar(),
-      ),
     );
   }
 }

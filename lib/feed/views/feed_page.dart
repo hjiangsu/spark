@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:spark/core/auth/bloc/auth_bloc.dart';
 
 import 'package:spark/core/enums/category_options.dart';
 import 'package:spark/core/enums/front_page_options.dart';
@@ -12,7 +10,7 @@ import 'package:spark/core/singletons/reddit_client.dart';
 
 import 'package:spark/feed/feed.dart';
 import 'package:spark/feed/widgets/feed_card_list.dart';
-import 'package:spark/feed/widgets/feed_drawer.dart';
+import 'package:spark/spark/bloc/spark_bloc.dart';
 
 import 'package:spark/widgets/error_message/error_message.dart';
 
@@ -77,8 +75,13 @@ class _FeedPageState extends State<FeedPage> {
                 style: theme.textTheme.titleLarge,
               ),
               actions: getAppBarActions(context, widget.subreddit == null),
+              leading: IconButton(
+                onPressed: () => context.read<SparkBloc>().state.scaffoldKey?.currentState!.openDrawer(),
+                icon: const Icon(Icons.menu),
+              ),
             ),
-            drawer: widget.subreddit == null ? FeedDrawer(frontPage: state.frontPage ?? FrontPage.home) : null,
+
+            // drawer: widget.subreddit == null ? FeedDrawer(frontPage: state.frontPage ?? FrontPage.home) : null,
             body: getFeedBody(context, state.status, state),
           );
         },

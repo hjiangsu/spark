@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
-import 'package:spark/post/views/post_page.dart';
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
 import 'package:spark/core/utils/numbers.dart';
 import 'package:spark/feed/widgets/post_heading.dart';
