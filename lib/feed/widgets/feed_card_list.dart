@@ -60,6 +60,7 @@ class _FeedCardListState extends State<FeedCardList> {
       child: ListView.builder(
         controller: _scrollController,
         itemCount: widget.posts.length + 1,
+        cacheExtent: MediaQuery.of(context).size.height * 1.5,
         itemBuilder: (context, index) {
           if (index != widget.posts.length) {
             return FeedCard(

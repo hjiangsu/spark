@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/feed/bloc/feed_bloc.dart';
+import 'package:spark/spark/bloc/spark_bloc.dart';
 
 class FrontPageDestination {
   const FrontPageDestination(this.label, this.frontPage, this.icon);
@@ -60,7 +61,7 @@ class _FeedDrawerState extends State<FeedDrawer> {
               children: frontPageDestinations.map((FrontPageDestination destination) {
                 return FeedDrawerItem(
                     onTap: () {
-                      context.read<FeedBloc>().add(FeedRefreshed(frontPage: destination.frontPage));
+                      context.read<SparkBloc>().state.feedContext?.read<FeedBloc>().add(FeedRefreshed(frontPage: destination.frontPage));
                       context.pop();
                     },
                     label: destination.label,
@@ -95,7 +96,7 @@ class _FeedDrawerState extends State<FeedDrawer> {
                                     minimumSize: const Size.fromHeight(50),
                                   ),
                                   onPressed: () {
-                                    context.read<FeedBloc>().add(FeedRefreshed(subreddit: state.subscriptions![index].information['display_name']));
+                                    context.read<SparkBloc>().state.feedContext?.read<FeedBloc>().add(FeedRefreshed(subreddit: state.subscriptions![index].information['display_name']));
                                     context.pop();
                                   },
                                   child: Text(state.subscriptions![index].information['display_name_prefixed']),

@@ -65,6 +65,7 @@ dependencies:
   webview_flutter_wkwebview: ^3.4.3
   go_router: ^7.0.1
   uuid: ^3.0.7
+  async: ^2.11.0
   
 dev_dependencies:
   flutter_test:

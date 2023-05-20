@@ -62,10 +62,14 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return BlocProvider(
-      create: (context) => FeedBloc(reddit: RedditClient.instance),
+    return BlocProvider<FeedBloc>(
+      create: (context) {
+        return FeedBloc(reddit: RedditClient.instance);
+      },
       child: BlocBuilder<FeedBloc, FeedState>(
         builder: (context, state) {
+          context.read<SparkBloc>().add(FeedContextChanged(feedContext: context));
+
           return Scaffold(
             appBar: AppBar(
               toolbarHeight: 70.0,
@@ -75,10 +79,12 @@ class _FeedPageState extends State<FeedPage> {
                 style: theme.textTheme.titleLarge,
               ),
               actions: getAppBarActions(context, widget.subreddit == null),
-              leading: IconButton(
-                onPressed: () => context.read<SparkBloc>().state.scaffoldKey?.currentState!.openDrawer(),
-                icon: const Icon(Icons.menu),
-              ),
+              leading: widget.subreddit == null
+                  ? IconButton(
+                      onPressed: () => context.read<SparkBloc>().state.scaffoldKey?.currentState!.openDrawer(),
+                      icon: const Icon(Icons.menu),
+                    )
+                  : null,
             ),
 
             // drawer: widget.subreddit == null ? FeedDrawer(frontPage: state.frontPage ?? FrontPage.home) : null,
@@ -139,6 +145,7 @@ class _FeedPageState extends State<FeedPage> {
                     ))
                 .toList(),
           ),
+          const SizedBox(width: 8.0),
         ],
       )
     ];

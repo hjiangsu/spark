@@ -12,3 +12,9 @@ class ScaffoldKeyChanged extends SparkEvent {
 
   const ScaffoldKeyChanged({required this.scaffoldKey});
 }
+
+class FeedContextChanged extends SparkEvent {
+  final BuildContext feedContext;
+
+  const FeedContextChanged({required this.feedContext});
+}

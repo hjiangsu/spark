@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 class IconText extends StatelessWidget {
-  const IconText({super.key, required this.leadingIcon, this.leadingIconColor, required this.text, this.suffixIcon, this.suffixIconColor, this.onTap, this.onDoubleTap});
+  const IconText({
+    super.key,
+    required this.leadingIcon,
+    this.leadingIconColor,
+    required this.text,
+    this.suffixIcon,
+    this.suffixIconColor,
+    this.onTap,
+    this.onDoubleTap,
+  });
 
   final Function()? onTap;
   final Function()? onDoubleTap;
@@ -29,22 +38,26 @@ class IconText extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 children: [
-                  Icon(leadingIcon, size: leadingIconColor != null ? 20.0 : 16.0, color: leadingIconColor ?? theme.iconTheme.color, weight: leadingIconColor != null ? 1000 : 350),
-                  const SizedBox(width: 4.0),
-                  Text(
-                    text,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
+                  Icon(
+                    leadingIcon,
+                    size: leadingIconColor != null ? 20.0 : 16.0,
+                    weight: leadingIconColor != null ? 1000 : 350,
+                    color: leadingIconColor ?? theme.iconTheme.color,
                   ),
-                  suffixIcon != null
-                      ? Row(
-                          children: [
-                            const SizedBox(width: 4.0),
-                            Icon(suffixIcon, size: suffixIconColor != null ? 20.0 : 16.0, color: suffixIconColor ?? theme.iconTheme.color),
-                          ],
-                        )
-                      : Container(),
+                  const SizedBox(width: 6.0),
+                  Text(text, style: theme.textTheme.labelMedium),
+                  if (suffixIcon != null)
+                    Row(
+                      children: [
+                        const SizedBox(width: 6.0),
+                        Icon(
+                          suffixIcon,
+                          size: suffixIconColor != null ? 20.0 : 16.0,
+                          weight: suffixIconColor != null ? 1000 : 350,
+                          color: suffixIconColor ?? theme.iconTheme.color,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),

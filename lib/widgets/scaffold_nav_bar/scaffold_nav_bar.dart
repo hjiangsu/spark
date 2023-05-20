@@ -28,8 +28,9 @@ import 'package:uuid/uuid.dart';
 // ];
 
 class ScaffoldNavBar extends StatefulWidget {
-  const ScaffoldNavBar({Key? key, required this.child}) : super(key: key);
   final Widget child;
+
+  const ScaffoldNavBar({Key? key, required this.child}) : super(key: key);
 
   @override
   State<ScaffoldNavBar> createState() => _ScaffoldNavBarState();

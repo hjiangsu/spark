@@ -26,6 +26,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       _onAuthChecked,
       transformer: throttleDroppable(throttleDuration),
     );
+    on<AuthLogout>(
+      _onAuthLogOut,
+      transformer: throttleDroppable(throttleDuration),
+    );
   }
 
   final Reddit reddit;
@@ -68,6 +72,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         //   await reddit.authorization?.setAuthorization(decodedAuthorizationMap);
         // }
       }
+
+      List<Subreddit> subscriptions = [];
+
+      if (reddit.authorization != null && reddit.authorization!.isUserAuthenticated) {
+        Redditor user = await reddit.me();
+        subscriptions = await user.subscriptions();
+      }
+
+      emit(
+        state.copyWith(
+          status: AuthStatus.success,
+          isUserAuthorized: reddit.authorization?.isUserAuthenticated ?? false,
+          subscriptions: subscriptions,
+        ),
+      );
+    } catch (e, s) {
+      emit(state.copyWith(status: AuthStatus.failure));
+      Sentry.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> _onAuthLogOut(AuthLogout event, Emitter<AuthState> emit) async {
+    emit(state.copyWith(status: AuthStatus.loading));
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('userAuthorization'); // Remove user authorization
+
+      String? userUuid = prefs.getString('userUuid');
+
+      if (userUuid == null || userUuid.isEmpty) {
+        // Generate a user uuid
+        Uuid uuid = const Uuid();
+        userUuid = uuid.v4();
+
+        // Set the userUuid to local storage
+        await prefs.setString('userUuid', userUuid);
+      }
+
+      // First, perform anonymous authorization with Reddit
+      await reddit.authorize(userUuid: userUuid);
 
       List<Subreddit> subscriptions = [];
 

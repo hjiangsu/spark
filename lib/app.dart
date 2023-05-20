@@ -25,6 +25,8 @@ class CustomScrollBehavior extends MaterialScrollBehavior {
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
 
+BuildContext? feedContext;
+
 final GoRouter _router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: '/feed',
@@ -44,6 +46,14 @@ final GoRouter _router = GoRouter(
               builder: (BuildContext context, GoRouterState state) {
                 return FeedPage(subreddit: state.pathParameters['id']!);
               },
+              routes: <RouteBase>[
+                GoRoute(
+                  path: 'post/:id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return PostPage(postId: state.pathParameters['id']!);
+                  },
+                ),
+              ],
             ),
             GoRoute(
               path: 'post/:id',
@@ -51,6 +61,20 @@ final GoRouter _router = GoRouter(
                 return PostPage(postId: state.pathParameters['id']!);
               },
             ),
+            GoRoute(
+              path: 'redditor/:id',
+              builder: (BuildContext context, GoRouterState state) {
+                return RedditorPage(username: state.pathParameters['id']!);
+              },
+              routes: <RouteBase>[
+                GoRoute(
+                  path: 'post/:id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return PostPage(postId: state.pathParameters['id']!);
+                  },
+                ),
+              ],
+            )
           ],
         ),
         GoRoute(

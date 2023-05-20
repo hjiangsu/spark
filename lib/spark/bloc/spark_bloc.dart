@@ -12,5 +12,14 @@ class SparkBloc extends Bloc<SparkEvent, SparkState> {
       emit(state.copyWith(status: SparkStatus.loading));
       emit(state.copyWith(status: SparkStatus.success, scaffoldKey: event.scaffoldKey));
     });
+
+    on<FeedContextChanged>((event, emit) {
+      if (state.feedContext == event.feedContext) {
+        emit(state.copyWith(status: SparkStatus.success));
+      } else {
+        emit(state.copyWith(status: SparkStatus.loading));
+        emit(state.copyWith(status: SparkStatus.success, feedContext: event.feedContext));
+      }
+    });
   }
 }

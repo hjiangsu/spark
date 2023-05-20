@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:imgur/imgur.dart';
@@ -16,44 +15,24 @@ import 'package:spark/core/singletons/imgur_client.dart';
 Size _getScaledMediaSize({width, height, offset = 24.0}) {
   double mediaRatio = width / height;
 
-  double widthScale = (MediaQueryData.fromView(WidgetsBinding.instance.window).size.width - offset) / width;
+  double widthScale = (MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.first).size.width - offset) / width;
   double mediaMaxWidth = widthScale * width;
   double mediaMaxHeight = mediaMaxWidth / mediaRatio;
 
   return Size(mediaMaxWidth, mediaMaxHeight);
 }
 
-/// Given a url for a valid image, determine the width and height of the image.
-Future<Size> _calculateImageDimension(String url) {
-  Completer<Size> completer = Completer();
-
-  try {
-    Image image = Image(
-      image: CachedNetworkImageProvider(
-        url,
-        errorListener: () {
-          Size size = const Size(0, 0);
-          completer.completeError(size);
-        },
-      ),
-    );
-
-    image.image.resolve(const ImageConfiguration()).addListener(
-      ImageStreamListener(
-        (ImageInfo image, bool synchronousCall) {
-          dynamic myImage = image.image;
-          Size size = Size(myImage.width.toDouble(), myImage.height.toDouble());
-          if (completer.isCompleted == false) completer.complete(size);
-        },
-      ),
-    );
-  } catch (e) {
-    print(e);
-  }
-
-  return completer.future;
+/// Given an Image resource, attempt to retrieve information about the image, including width and height
+/// Only use this if there is no width/height information available
+Future<ImageInfo> getImageInfo(Image img) async {
+  final c = Completer<ImageInfo>();
+  img.image.resolve(const ImageConfiguration()).addListener(ImageStreamListener((ImageInfo i, bool _) {
+    if (c.isCompleted == false) c.complete(i);
+  }));
+  return c.future;
 }
 
+/// Parse a submission retrieved from the Reddit library.
 Future<RedditSubmission> parseSubmission(Submission submission) async {
   bool isText = false;
   bool isVideo = false;
@@ -75,51 +54,53 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
       // Handle internal reddit video links
       isVideo = true;
 
+      // Fetch information about the video
       String mediaLink = submission.information["media"]["reddit_video"]["fallback_url"];
       int originalHeight = submission.information["media"]["reddit_video"]["height"];
       int originalWidth = submission.information["media"]["reddit_video"]["width"];
 
+      // Fetch the size dimensions scaled to the current device
       Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
       mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
     } catch (e) {
       isVideo = false; // Reset this to false since we encountered an error
-      print(e);
     }
   } else if (overriddenURL.startsWith("https://i.redd.it")) {
     try {
-      // Handle internal reddit image/media links
+      // Handle internal reddit image links
       isImage = true;
 
-      String mediaLink = overriddenURL;
-      Size imageDimensions = await _calculateImageDimension(overriddenURL);
-      double originalHeight = imageDimensions.height;
-      double originalWidth = imageDimensions.width;
+      // Fetch information about the image
+      String mediaLink = HtmlUnescape().convert(submission.information["preview"]["images"][0]["source"]["url"]);
+      double originalHeight = submission.information["preview"]["images"][0]["source"]["height"].toDouble();
+      double originalWidth = submission.information["preview"]["images"][0]["source"]["width"].toDouble();
 
+      // Fetch the size dimensions scaled to the current device
       Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
       mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
     } catch (e) {
       isImage = false; // Reset this to false since we encountered an error
-      print(e);
     }
   } else if (overriddenURL.startsWith("https://www.reddit.com/gallery/")) {
     try {
       // Handle reddit gallery links
       isGallery = true;
 
+      // Go through each of the images within the gallery and process them
       submission.information["media_metadata"].forEach((key, value) {
         String mediaLink = HtmlUnescape().convert(value["s"]["u"] ?? value["s"]["gif"]);
         int originalHeight = value["s"]["y"];
         int originalWidth = value["s"]["x"];
 
+        // Fetch the size dimensions scaled to the current device
         Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
         mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
       });
     } catch (e) {
       isGallery = false; // Reset this to false since we encountered an error
-      print(e);
     }
   } else {
     // Handle special cases
@@ -130,7 +111,6 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
         ImgurImage image = await imgur.image(url: overriddenURL);
 
         String mediaType = image.information!["type"];
-        print(image.information!["type"]);
 
         if (mediaType.contains('mp4')) {
           isVideo = true;
@@ -145,9 +125,7 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
         Size size = _getScaledMediaSize(width: originalWidth, height: originalHeight);
 
         mediaLinks.add(Media(url: mediaLink, width: size.width, height: size.height));
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
     } else {
       // Handle external links
       isExternalLink = true;
@@ -181,14 +159,15 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
   );
 }
 
+/// Parse a list of comments retrieved from the Reddit library.
 dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
-  List<RedditComment> comments0 = [];
-  if (comments == null) return comments0;
+  List<RedditComment> redditComments = [];
+  if (comments == null) return redditComments;
 
   for (Comment comment in comments) {
     List<dynamic> children = comment.children ?? [];
 
-    comments0.add(RedditComment(
+    redditComments.add(RedditComment(
       id: comment.information["id"],
       authorId: comment.information["author_fullname"] ?? "",
       subredditId: comment.information["subreddit_id"],
@@ -202,5 +181,5 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
     ));
   }
 
-  return comments0;
+  return redditComments;
 }
