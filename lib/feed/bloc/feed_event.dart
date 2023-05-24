@@ -16,3 +16,16 @@ class FeedRefreshed extends FeedEvent {
 
   FeedRefreshed({this.subreddit, this.category, this.frontPage});
 }
+
+class FeedPostVoted extends FeedEvent {
+  final String postId;
+  final bool vote;
+
+  FeedPostVoted({required this.postId, required this.vote});
+}
+
+class FeedPostSaved extends FeedEvent {
+  final String postId;
+
+  FeedPostSaved({required this.postId});
+}

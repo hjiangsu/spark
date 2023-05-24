@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:spark/settings/views/appearance_settings_page.dart';
-
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -40,9 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
               leading: const Icon(Icons.text_fields_rounded),
               trailing: const Icon(Icons.chevron_right_rounded),
               title: Text('Appearance', style: theme.textTheme.bodyMedium),
-              onTap: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AppearanceSettingsPage()),
-              ),
+              onTap: () => GoRouter.of(context).push('/settings/appearance'),
             ),
             // const Divider(
             //   color: Colors.white24,

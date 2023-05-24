@@ -9,6 +9,7 @@ import 'package:spark/feed/feed.dart';
 import 'package:spark/post/post.dart';
 import 'package:spark/redditor/views/redditor_page.dart';
 import 'package:spark/search/views/search_page.dart';
+import 'package:spark/settings/views/appearance_settings_page.dart';
 import 'package:spark/settings/views/settings_page.dart';
 
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
@@ -103,11 +104,12 @@ final GoRouter _router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                    path: 'post/:id',
-                    builder: (BuildContext context, GoRouterState state) {
-                      return PostPage(postId: state.pathParameters['id']!);
-                    },
-                    routes: const <RouteBase>[]),
+                  path: 'post/:id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return PostPage(postId: state.pathParameters['id']!);
+                  },
+                  routes: const <RouteBase>[],
+                ),
               ],
             ),
           ],
@@ -125,7 +127,15 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: '/settings',
           pageBuilder: (context, state) => const NoTransitionPage(child: SettingsPage()),
-          routes: const <RouteBase>[],
+          routes: <RouteBase>[
+            GoRoute(
+              path: 'appearance',
+              builder: (BuildContext context, GoRouterState state) {
+                return const AppearanceSettingsPage();
+              },
+              routes: const <RouteBase>[],
+            ),
+          ],
         ),
       ],
     ),

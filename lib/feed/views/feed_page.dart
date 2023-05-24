@@ -163,6 +163,7 @@ class _FeedPageState extends State<FeedPage> {
         return const Center(child: CircularProgressIndicator());
       case FeedStatus.loading:
         return const Center(child: CircularProgressIndicator());
+      case FeedStatus.refreshing:
       case FeedStatus.success:
         return FeedCardList(
           subreddit: state.subreddit,

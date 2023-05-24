@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pubnub/pubnub.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,6 +99,7 @@ class _ScaffoldNavBarState extends State<ScaffoldNavBar> {
           case AuthStatus.loading:
             return const Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
           case AuthStatus.success:
+            FlutterNativeSplash.remove();
             return Scaffold(
               key: scaffoldKey,
               body: widget.child,

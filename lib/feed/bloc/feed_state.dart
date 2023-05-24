@@ -1,6 +1,6 @@
 part of 'feed_bloc.dart';
 
-enum FeedStatus { initial, loading, success, empty, failure }
+enum FeedStatus { initial, loading, refreshing, success, empty, failure }
 
 class FeedState extends Equatable {
   const FeedState({
@@ -12,10 +12,12 @@ class FeedState extends Equatable {
     this.frontPage,
     this.category = CategoryOptions.best,
     this.posts = const <RedditSubmission>[],
+    this.postInstances = const <Submission>[],
   });
 
   final FeedStatus status;
   final List<RedditSubmission> posts;
+  final List<Submission> postInstances;
 
   final dynamic subredditInstance;
   final dynamic frontInstance;
@@ -29,6 +31,7 @@ class FeedState extends Equatable {
   FeedState copyWith({
     required FeedStatus status,
     required List<RedditSubmission> posts,
+    List<Submission>? postInstances,
     dynamic subredditInstance,
     dynamic frontInstance,
     String? subreddit,
@@ -39,6 +42,7 @@ class FeedState extends Equatable {
     return FeedState(
       status: status,
       posts: posts,
+      postInstances: postInstances ?? this.postInstances,
       subredditInstance: subredditInstance,
       frontInstance: frontInstance,
       subreddit: subreddit,

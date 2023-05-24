@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'package:spark/app.dart';
 import 'package:spark/core/debug/spark_bloc_observer.dart';
@@ -15,8 +16,9 @@ import 'package:spark/core/debug/spark_bloc_observer.dart';
 // To upload debug symbols: flutter packages pub run sentry_dart_plugin
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Load up environment variables
   await dotenv.load(fileName: ".env");

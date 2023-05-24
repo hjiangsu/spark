@@ -39,7 +39,6 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         bool useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
         await prefs.setBool('useDarkTheme', !useDarkTheme);
-        setState(() => useDarkTheme = !useDarkTheme);
         context.read<ThemeBloc>().add(ThemeRefreshed());
         break;
       case 'colorScheme':
@@ -150,6 +149,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
               onChanged: (bool value) {
                 HapticFeedback.lightImpact();
                 setPreferences('useDarkTheme', value);
+                setState(() => useDarkTheme = !useDarkTheme);
               },
             ),
           ],

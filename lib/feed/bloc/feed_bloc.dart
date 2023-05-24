@@ -28,9 +28,16 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
       _onFeedFetched,
       transformer: throttleDroppable(throttleDuration),
     );
-
     on<FeedRefreshed>(
       _onFeedRefreshed,
+      transformer: throttleDroppable(throttleDuration),
+    );
+    on<FeedPostVoted>(
+      _onFeedPostVoted,
+      transformer: throttleDroppable(throttleDuration),
+    );
+    on<FeedPostSaved>(
+      _onFeedPostSaved,
       transformer: throttleDroppable(throttleDuration),
     );
   }
@@ -48,7 +55,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         submissions = await state.subredditInstance.more();
       }
 
+      List<Submission> postInstances = state.postInstances;
       List<RedditSubmission> posts = List.of(state.posts);
+
+      postInstances.addAll(submissions);
 
       Iterable<Future<RedditSubmission>> postFutures = submissions.map<Future<RedditSubmission>>((post) => parseSubmission(post));
       List<RedditSubmission> newPosts = await Future.wait(postFutures);
@@ -59,6 +69,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         state.copyWith(
           status: posts.isNotEmpty ? FeedStatus.success : FeedStatus.empty,
           posts: posts,
+          postInstances: postInstances,
           subredditInstance: state.subredditInstance,
           frontInstance: state.frontInstance,
           subreddit: state.subreddit,
@@ -194,6 +205,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
         state.copyWith(
           status: posts.isNotEmpty ? FeedStatus.success : FeedStatus.empty,
           posts: posts,
+          postInstances: submissions,
           subredditInstance: subreddit,
           frontInstance: front,
           subreddit: subredditName,
@@ -202,6 +214,61 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           category: event.category,
         ),
       );
+    } catch (e, s) {
+      emit(state.copyWith(status: FeedStatus.failure, posts: []));
+      Sentry.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> _onFeedPostVoted(FeedPostVoted event, Emitter<FeedState> emit) async {
+    emit(state.copyWith(status: FeedStatus.refreshing, posts: state.posts));
+
+    try {
+      // Find the particular instance
+      Submission submission = state.postInstances.firstWhere((postInstance) => 't3_${postInstance.information["id"]}' == event.postId);
+
+      if (event.vote == true) {
+        await submission.upvote();
+      } else if (event.vote == false) {
+        await submission.downvote();
+      }
+
+      // Re-parse the affected submission
+      RedditSubmission parsedSubmission = await parseSubmission(submission);
+
+      int existingSubmissionIndex = state.posts.indexWhere((post) => post.id == event.postId);
+      state.posts[existingSubmissionIndex] = parsedSubmission;
+
+      return emit(state.copyWith(status: FeedStatus.success, posts: state.posts));
+    } catch (e, s) {
+      emit(state.copyWith(status: FeedStatus.failure, posts: []));
+      Sentry.captureException(e, stackTrace: s);
+    }
+  }
+
+  Future<void> _onFeedPostSaved(FeedPostSaved event, Emitter<FeedState> emit) async {
+    emit(state.copyWith(status: FeedStatus.refreshing, posts: state.posts));
+
+    try {
+      // Find the particular instance
+      Submission submission = state.postInstances.firstWhere((postInstance) => 't3_${postInstance.information["id"]}' == event.postId);
+
+      // Check current save status
+      bool isSaved = submission.information["saved"] ?? false;
+
+      if (isSaved == true) {
+        await submission.unsave();
+      } else {
+        await submission.save();
+      }
+
+      // Re-parse the affected submission
+      RedditSubmission parsedSubmission = await parseSubmission(submission);
+
+      int existingSubmissionIndex = state.posts.indexWhere((post) => post.id == event.postId);
+      state.posts[existingSubmissionIndex] = parsedSubmission;
+
+      return emit(state.copyWith(status: FeedStatus.success, posts: state.posts));
     } catch (e, s) {
       emit(state.copyWith(status: FeedStatus.failure, posts: []));
       Sentry.captureException(e, stackTrace: s);

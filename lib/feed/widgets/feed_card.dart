@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/core/utils/numbers.dart';
+import 'package:spark/feed/bloc/feed_bloc.dart';
 import 'package:spark/feed/widgets/post_heading.dart';
 import 'package:spark/widgets/badge_list/badge_list.dart';
 
@@ -25,14 +27,9 @@ class FeedCard extends StatefulWidget {
 }
 
 class _FeedCardState extends State<FeedCard> {
-  List<Widget> buttonList = <Widget>[
-    IconButton(onPressed: () {}, icon: const Icon(Icons.expand_less_rounded, size: 30.0)),
-    IconButton(onPressed: () {}, icon: const Icon(Icons.expand_more_rounded, size: 30.0)),
-    IconButton(onPressed: () {}, icon: const Icon(Icons.bookmark)),
-    IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
-  ];
+  List<Widget> buttonList = [];
 
-  List<Text> labelList = const <Text>[Text('Upvote'), Text('Downvote'), Text('Save'), Text('Share')];
+  List<Text> labelList = const <Text>[Text('Upvote'), Text('Downvote'), Text('Save')];
 
   @override
   void initState() {
@@ -53,6 +50,32 @@ class _FeedCardState extends State<FeedCard> {
           ),
         InkWell(
           onLongPress: () {
+            List<Widget> buttonList = [
+              IconButton(
+                onPressed: () {
+                  context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: true));
+                  context.pop();
+                },
+                icon: const Icon(Icons.north),
+                color: widget.post.upvoted ? Colors.orange : null,
+              ),
+              IconButton(
+                onPressed: () {
+                  context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: false));
+                  context.pop();
+                },
+                icon: const Icon(Icons.south),
+                color: widget.post.downvoted ? Colors.blue : null,
+              ),
+              IconButton(
+                onPressed: () {
+                  context.read<FeedBloc>().add(FeedPostSaved(postId: widget.post.id));
+                  context.pop();
+                },
+                icon: Icon(widget.post.saved ? Icons.bookmark : Icons.bookmark_border_rounded),
+              ),
+              // IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+            ];
             showModalBottomSheet<void>(
               showDragHandle: true,
               context: context,
