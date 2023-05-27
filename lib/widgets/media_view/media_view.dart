@@ -58,6 +58,7 @@ class _MediaViewState extends State<MediaView> {
                 onVideoInitialized: (VideoPlayerController videoController) => setState(() {
                   videoController = videoController;
                 }),
+                authorizationToken: widget.post.video?.token,
               ),
             ),
           ),
@@ -67,15 +68,22 @@ class _MediaViewState extends State<MediaView> {
 
     // Display a carousel of images for galleries
     if (widget.post.gallery != null) {
-      List<Media> media = widget.post.gallery!;
+      List<Media> mediaList = widget.post.gallery!;
+
+      double aspectRatio = 0;
+
+      for (Media media in mediaList) {
+        double _aspectRatio = media.width! / media.height!;
+        if (_aspectRatio > aspectRatio) aspectRatio = _aspectRatio;
+      }
 
       return CarouselSlider(
         options: CarouselOptions(
           enableInfiniteScroll: false,
-          aspectRatio: 1.0,
+          aspectRatio: aspectRatio,
           enlargeCenterPage: true,
         ),
-        items: media.map((media) {
+        items: mediaList.map((media) {
           return Builder(
             builder: (BuildContext context) {
               return ImagePreview(
@@ -83,6 +91,7 @@ class _MediaViewState extends State<MediaView> {
                 width: media.width!,
                 height: media.height!,
                 nsfw: false,
+                isGallery: true,
               );
             },
           );

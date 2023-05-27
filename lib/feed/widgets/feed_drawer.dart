@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/core/enums/front_page_options.dart';
 import 'package:spark/feed/bloc/feed_bloc.dart';
-import 'package:spark/spark/bloc/spark_bloc.dart';
+import 'package:spark/core/spark/bloc/spark_bloc.dart';
 
 class FrontPageDestination {
   const FrontPageDestination(this.label, this.frontPage, this.icon);

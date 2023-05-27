@@ -9,6 +9,7 @@ import 'package:spark/feed/widgets/post_heading.dart';
 import 'package:spark/post/bloc/post_bloc.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
+import 'package:spark/widgets/link_preview_card/link_preview_card.dart';
 import 'package:spark/widgets/media_view/media_view.dart';
 
 class PostPage extends StatelessWidget {
@@ -63,6 +64,7 @@ class PostPage extends StatelessWidget {
                                   )
                                 : Container(),
                             const SizedBox(height: 8.0),
+                            LinkPreviewCard(originURL: state.post!.url),
                           ],
                         ),
                       ),

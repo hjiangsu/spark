@@ -49,6 +49,13 @@ Contributions are always welcomed here! To contribute features or bug-fixes:
 
 More information regarding contributions will be added in the future.
 
+## Build
+Building the release files depends on the platform.
+- iOS: `flutter build ios --release`
+- Android: `flutter build apk`
+
+Note: If Sentry is used for collecting error information, the corresponding debug symbols must be uploaded. This can be done using the following command: `flutter packages pub run sentry_dart_plugin`
+
 ## Conventions
 This section lists some of the conventions used by the project to keep consistent behaviour and layouts.
 

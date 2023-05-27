@@ -10,18 +10,22 @@ class SparkState extends Equatable {
   });
 
   final SparkStatus status;
-  final GlobalKey<ScaffoldState>? scaffoldKey;
+
+  /// The feed context is kept in the state in order for it to be referenced in the app drawer
   final BuildContext? feedContext;
+
+  /// The scaffold key is kept in the state in order for the feed page to access the app scaffold
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   SparkState copyWith({
     SparkStatus? status,
-    GlobalKey<ScaffoldState>? scaffoldKey,
     BuildContext? feedContext,
+    GlobalKey<ScaffoldState>? scaffoldKey,
   }) {
     return SparkState(
       status: status ?? this.status,
-      scaffoldKey: scaffoldKey ?? this.scaffoldKey,
       feedContext: feedContext ?? this.feedContext,
+      scaffoldKey: scaffoldKey ?? this.scaffoldKey,
     );
   }
 

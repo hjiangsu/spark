@@ -10,8 +10,9 @@ class ImagePreview extends StatefulWidget {
   final bool nsfw;
   final double height;
   final double width;
+  final bool isGallery;
 
-  const ImagePreview({super.key, required this.url, required this.height, required this.width, this.nsfw = false});
+  const ImagePreview({super.key, required this.url, required this.height, required this.width, this.nsfw = false, this.isGallery = false});
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
@@ -60,64 +61,66 @@ class _ImagePreviewState extends State<ImagePreview> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-      child: InkWell(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(6), // Image border
-          child: Stack(
-            children: [
-              CachedNetworkImage(
-                imageUrl: widget.url,
-                height: widget.height,
-                width: double.infinity,
-                memCacheHeight: widget.height.toInt(),
-                memCacheWidth: widget.width.toInt(),
-                fit: BoxFit.fitWidth,
-                progressIndicatorBuilder: (context, url, downloadProgress) => Container(
-                  color: Colors.grey.shade900,
-                  child: Center(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: CircularProgressIndicator(value: downloadProgress.progress),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+        child: InkWell(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(6), // Image border
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  imageUrl: widget.url,
+                  height: widget.isGallery ? null : widget.height,
+                  width: widget.isGallery ? null : widget.width,
+                  memCacheHeight: widget.height.toInt(),
+                  memCacheWidth: widget.width.toInt(),
+                  fit: BoxFit.fitWidth,
+                  progressIndicatorBuilder: (context, url, downloadProgress) => Container(
+                    color: Colors.grey.shade900,
+                    child: Center(
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: CircularProgressIndicator(value: downloadProgress.progress),
+                      ),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.grey.shade900,
+                    child: const Center(
+                      child: SizedBox(
+                        width: 40,
+                        height: 40,
+                        child: Icon(Icons.error),
+                      ),
                     ),
                   ),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey.shade900,
-                  child: const Center(
-                    child: SizedBox(
-                      width: 40,
-                      height: 40,
-                      child: Icon(Icons.error),
-                    ),
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: blur ? startBlur : endBlur, end: blur ? endBlur : startBlur),
+                  duration: Duration(milliseconds: widget.nsfw ? 250 : 0),
+                  builder: (_, value, child) {
+                    return BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: value, sigmaY: value),
+                      child: child,
+                    );
+                  },
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
                   ),
-                ),
-              ),
-              TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: blur ? startBlur : endBlur, end: blur ? endBlur : startBlur),
-                duration: Duration(milliseconds: widget.nsfw ? 250 : 0),
-                builder: (_, value, child) {
-                  return BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: value, sigmaY: value),
-                    child: child,
-                  );
-                },
-                child: DecoratedBox(
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
+          onTap: () {
+            if (widget.nsfw && blur) {
+              setState(() => blur = false);
+            } else {
+              onImageTap();
+            }
+          },
         ),
-        onTap: () {
-          if (widget.nsfw && blur) {
-            setState(() => blur = false);
-          } else {
-            onImageTap();
-          }
-        },
       ),
     );
   }

@@ -23,6 +23,7 @@ class RedditSubmission {
     required this.saved,
     required this.upvoted,
     required this.downvoted,
+    required this.url,
   });
 
   // In this context, the ids are the fullnames of the submission
@@ -55,4 +56,6 @@ class RedditSubmission {
   bool saved;
   bool upvoted;
   bool downvoted;
+
+  String url;
 }

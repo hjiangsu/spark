@@ -9,7 +9,7 @@ import 'package:pubnub/pubnub.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/feed/widgets/feed_drawer.dart';
-import 'package:spark/spark/spark.dart';
+import 'package:spark/core/spark/spark.dart';
 
 import 'package:spark/widgets/bottom_app_bar/bottom_app_bar.dart';
 import 'package:spark/widgets/error_message/error_message.dart';

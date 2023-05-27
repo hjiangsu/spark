@@ -10,7 +10,7 @@ import 'package:spark/core/singletons/reddit_client.dart';
 
 import 'package:spark/feed/feed.dart';
 import 'package:spark/feed/widgets/feed_card_list.dart';
-import 'package:spark/spark/bloc/spark_bloc.dart';
+import 'package:spark/core/spark/bloc/spark_bloc.dart';
 
 import 'package:spark/widgets/error_message/error_message.dart';
 

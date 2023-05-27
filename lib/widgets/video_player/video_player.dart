@@ -16,6 +16,7 @@ class VideoPlayer extends StatefulWidget {
     this.width,
     this.showControls = false,
     this.onVideoInitialized,
+    this.authorizationToken,
   }) : super(key: playerKey);
 
   final Key playerKey;
@@ -24,6 +25,8 @@ class VideoPlayer extends StatefulWidget {
   final double? height;
   final double? width;
   final bool showControls;
+
+  final String? authorizationToken;
 
   @override
   State<VideoPlayer> createState() => _VideoPlayerState();
@@ -55,6 +58,14 @@ class _VideoPlayerState extends State<VideoPlayer> {
       _controller = VideoPlayerController.network(
         url,
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+        httpHeaders: widget.authorizationToken != null
+            ? {
+                'content-Type': 'application/json',
+                'accept': 'application/json',
+                'authorization': 'Bearer ${widget.authorizationToken}',
+                'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+              }
+            : {},
       );
     }
 
@@ -69,6 +80,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       aspectRatio: aspectRatio,
       allowPlaybackSpeedChanging: false,
       autoInitialize: true,
+      autoPlay: true,
       placeholder: const Center(
         child: SizedBox(
           width: 40,

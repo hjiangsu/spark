@@ -42,7 +42,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final prefs = await SharedPreferences.getInstance();
       String? userUuid = prefs.getString('userUuid');
 
-      print(userUuid);
       if (userUuid == null || userUuid.isEmpty) {
         // Generate a user uuid
         Uuid uuid = const Uuid();
