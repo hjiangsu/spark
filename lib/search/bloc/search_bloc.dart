@@ -12,21 +12,21 @@ import 'package:reddit/reddit.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 
-const throttleDuration = Duration(milliseconds: 150);
+// const throttleDuration = Duration(milliseconds: 150);
 
-EventTransformer<E> throttleDroppable<E>(Duration duration) {
-  return (events, mapper) => droppable<E>().call(events.throttle(duration), mapper);
-}
+// EventTransformer<E> throttleDroppable<E>(Duration duration) {
+//   return (events, mapper) => droppable<E>().call(events.throttle(duration, trailing: true), mapper);
+// }
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({required this.reddit}) : super(const SearchState()) {
     on<SearchReset>(
       _onSearchReset,
-      transformer: throttleDroppable(throttleDuration),
+      // transformer: throttleDroppable(throttleDuration),
     );
     on<SearchRefreshed>(
       _onSearchRefreshed,
-      transformer: throttleDroppable(throttleDuration),
+      // transformer: throttleDroppable(throttleDuration),
     );
   }
 
@@ -49,6 +49,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       Search search = await reddit.search();
 
       List<dynamic>? results;
+
+      print(event.query);
 
       if (event.searchType == SearchType.subreddit) {
         results = await search.search(subredditQuery: event.query, nsfw: false);

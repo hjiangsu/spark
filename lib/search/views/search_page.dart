@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:spark/core/enums/search_types.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
+import 'package:spark/core/utils/debouncer.dart';
 
 import 'package:spark/search/bloc/search_bloc.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
@@ -41,6 +42,10 @@ class _SearchPageState extends State<SearchPage> {
   void resetTextField() {
     FocusScope.of(context).unfocus(); // Unfocus the search field
     _controller.clear(); // Clear the search field
+  }
+
+  void _onChange(BuildContext context, String value) {
+    context.read<SearchBloc>().add(SearchRefreshed(query: value, searchType: searchType));
   }
 
   @override
@@ -88,7 +93,7 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                 ],
                 hintText: 'Search for ${searchType == SearchType.subreddit ? 'subreddits' : 'users'}',
-                onChanged: (value) => context.read<SearchBloc>().add(SearchRefreshed(query: value, searchType: searchType)),
+                onChanged: (value) => debounce(const Duration(milliseconds: 300), _onChange, [context, value]),
               ),
             ),
             body: LayoutBuilder(
