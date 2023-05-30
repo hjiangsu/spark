@@ -1,147 +1,109 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// class GeneralSettingsPage extends StatefulWidget {
-//   const GeneralSettingsPage({super.key});
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
 
-//   @override
-//   State<GeneralSettingsPage> createState() => _GeneralSettingsPageState();
-// }
+class GeneralSettingsPage extends StatefulWidget {
+  const GeneralSettingsPage({super.key});
 
-// class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
-//   bool isLoading = true;
+  @override
+  State<GeneralSettingsPage> createState() => _GeneralSettingsPageState();
+}
 
-//   bool showExpandedMedia = false;
-//   bool showVideoOnFeed = false;
-//   bool enableRandomButton = true;
+class _GeneralSettingsPageState extends State<GeneralSettingsPage> {
+  bool isLoading = true;
 
-//   void setPreferences(attribute, value) async {
-//     final prefs = await SharedPreferences.getInstance();
+  bool videoAutoplay = true;
 
-//     switch (attribute) {
-//       case 'showVideoOnFeed':
-//         prefs.setBool('showVideoOnFeed', value);
-//         setState(() => showVideoOnFeed = value);
-//         break;
-//       case 'enableRandomButton':
-//         prefs.setBool('enableRandomButton', value);
-//         setState(() => enableRandomButton = value);
-//         break;
-//     }
-//   }
+  void setPreferences(attribute, value) async {
+    final prefs = await SharedPreferences.getInstance();
 
-//   void _initPreferences() async {
-//     final prefs = await SharedPreferences.getInstance();
+    switch (attribute) {
+      case 'videoAutoPlay':
+        await prefs.setBool('videoAutoplay', value);
+        context.read<ThemeBloc>().add(ThemeRefreshed());
+        break;
+    }
+  }
 
-//     setState(() {
-//       showVideoOnFeed = prefs.getBool('showVideoOnFeed') ?? false;
-//       enableRandomButton = prefs.getBool('enableRandomButton') ?? true;
+  void _initPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
 
-//       isLoading = false;
-//     });
-//   }
+    setState(() {
+      videoAutoplay = prefs.getBool('videoAutoplay') ?? true;
+      isLoading = false;
+    });
+  }
 
-//   @override
-//   void initState() {
-//     WidgetsBinding.instance.addPostFrameCallback((_) => _initPreferences());
-//     super.initState();
-//   }
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initPreferences());
+    super.initState();
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final theme = Theme.of(context);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('General'),
+        centerTitle: false,
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: generalSettings(),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
 
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('General'),
-//         centerTitle: false,
-//       ),
-//       body: isLoading
-//           ? const Center(child: CircularProgressIndicator())
-//           : SingleChildScrollView(
-//               child: Column(
-//                 children: [
-//                   Container(
-//                     padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-//                     child: generalSettings(),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//     );
-//   }
+  Widget generalSettings() {
+    final theme = Theme.of(context);
 
-//   Widget generalSettings() {
-//     final theme = Theme.of(context);
-
-//     return Column(
-//       mainAxisAlignment: MainAxisAlignment.start,
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.only(bottom: 8.0),
-//           child: Text(
-//             'Posts',
-//             style: theme.textTheme.labelLarge!.copyWith(fontSize: 18.0),
-//           ),
-//         ),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             Row(
-//               children: [
-//                 Icon(showVideoOnFeed ? Icons.subscriptions_rounded : Icons.subscriptions_outlined),
-//                 const SizedBox(width: 8.0),
-//                 const Text('Show videos'),
-//               ],
-//             ),
-//             Switch(
-//               value: showVideoOnFeed,
-//               onChanged: (bool value) {
-//                 HapticFeedback.lightImpact();
-//                 setPreferences('showVideoOnFeed', value);
-//               },
-//             ),
-//           ],
-//         ),
-//         const Padding(
-//           padding: EdgeInsets.symmetric(vertical: 8.0),
-//           child: Divider(
-//             color: Colors.white24,
-//             thickness: 1,
-//             indent: 8.0,
-//             endIndent: 8.0,
-//           ),
-//         ),
-//         Padding(
-//           padding: const EdgeInsets.only(bottom: 8.0),
-//           child: Text(
-//             'Features',
-//             style: theme.textTheme.labelLarge!.copyWith(fontSize: 18.0),
-//           ),
-//         ),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//           children: [
-//             const Row(
-//               children: [
-//                 Icon(Icons.shuffle_rounded),
-//                 SizedBox(width: 8.0),
-//                 Text('Random subreddit button'),
-//               ],
-//             ),
-//             Switch(
-//               value: enableRandomButton,
-//               onChanged: (bool value) {
-//                 HapticFeedback.lightImpact();
-//                 setPreferences('enableRandomButton', value);
-//               },
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Videos',
+            style: theme.textTheme.titleLarge,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(videoAutoplay ? Icons.play_arrow_rounded : Icons.play_disabled_rounded),
+                const SizedBox(width: 8.0),
+                Text(
+                  'Autoplay videos',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            Switch(
+              value: videoAutoplay,
+              onChanged: (bool value) {
+                HapticFeedback.lightImpact();
+                setPreferences('videoAutoPlay', value);
+                setState(() => videoAutoplay = !videoAutoplay);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}

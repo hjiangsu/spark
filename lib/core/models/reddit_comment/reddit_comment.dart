@@ -1,3 +1,4 @@
+import 'package:spark/core/models/media/media.dart';
 
 class RedditComment {
   RedditComment({
@@ -11,6 +12,7 @@ class RedditComment {
     required this.createdAt,
     this.replies = const [],
     this.children = const [],
+    this.media,
   });
 
   // In this context, the ids are the fullnames of the submission
@@ -27,4 +29,6 @@ class RedditComment {
 
   int upvotes;
   int createdAt;
+
+  Media? media;
 }

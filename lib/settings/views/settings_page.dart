@@ -28,26 +28,30 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            // ListTile(
-            //   leading: const Icon(Icons.settings_rounded),
-            //   trailing: const Icon(Icons.chevron_right_rounded),
-            //   title: const Text('General'),
-            //   onTap: () => Navigator.of(context).push(
-            //     MaterialPageRoute(builder: (context) => const GeneralSettingsPage()),
-            //   ),
-            // ),
+            ListTile(
+              leading: const Icon(Icons.settings_rounded),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              title: const Text('General'),
+              onTap: () => GoRouter.of(context).push('/settings/general'),
+            ),
             ListTile(
               leading: const Icon(Icons.text_fields_rounded),
               trailing: const Icon(Icons.chevron_right_rounded),
               title: Text('Appearance', style: theme.textTheme.bodyMedium),
               onTap: () => GoRouter.of(context).push('/settings/appearance'),
             ),
-            // const Divider(
-            //   color: Colors.white24,
-            //   thickness: 1,
-            //   indent: 8.0,
-            //   endIndent: 8.0,
-            // ),
+            const Divider(
+              color: Colors.white24,
+              thickness: 1,
+              indent: 8.0,
+              endIndent: 8.0,
+            ),
+            ListTile(
+              leading: const Icon(Icons.developer_mode_rounded),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              title: Text('Developer', style: theme.textTheme.bodyMedium),
+              onTap: () => GoRouter.of(context).push('/settings/developer'),
+            ),
             // ListTile(
             //   leading: const Icon(Icons.developer_mode_rounded),
             //   trailing: const Icon(Icons.chevron_right_rounded),

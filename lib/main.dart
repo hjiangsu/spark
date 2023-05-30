@@ -16,7 +16,7 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   // Preserve the splash screen until the app is fully loaded
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Load up environment variables
   await dotenv.load(fileName: ".env");

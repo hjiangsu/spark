@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:spark/core/enums/media_type.dart';
 import 'package:spark/core/media/extensions/extensions.dart';
 import 'package:spark/core/models/media/media.dart';
@@ -106,6 +107,6 @@ class CustomMediaExtension {
   }
 
   static bool isCustomURL(String url, String customMediaExtensionURL) {
-    return url.contains(customMediaExtensionURL!);
+    return url.contains(customMediaExtensionURL);
   }
 }

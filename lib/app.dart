@@ -41,7 +41,7 @@ class _AppState extends State<App> {
           switch (state.status) {
             case ThemeStatus.loading:
               context.read<ThemeBloc>().add(ThemeRefreshed());
-              return const Center(child: CircularProgressIndicator());
+              return Container(color: const Color.fromRGBO(18, 18, 18, 1));
             case ThemeStatus.success:
               return MaterialApp.router(
                 routerConfig: router,

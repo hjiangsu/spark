@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:video_player/video_player.dart';
 
@@ -72,6 +74,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
     await _controller?.initialize();
     double aspectRatio = _controller!.value.aspectRatio;
 
+    final prefs = await SharedPreferences.getInstance();
+    bool? videoAutoplay = prefs.getBool('videoAutoplay');
+
     _chewie = ChewieController(
       looping: true,
       showControlsOnInitialize: false,
@@ -80,7 +85,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       aspectRatio: aspectRatio,
       allowPlaybackSpeedChanging: false,
       autoInitialize: true,
-      autoPlay: true,
+      autoPlay: videoAutoplay ?? true,
       placeholder: const Center(
         child: SizedBox(
           width: 40,
@@ -90,7 +95,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
       ),
     );
     _chewie?.setVolume(0.0);
-    if (widget.onVideoInitialized != null && _controller != null) widget.onVideoInitialized!(_controller!);
+    widget.onVideoInitialized!(_controller!);
+    // if (widget.onVideoInitialized != null && _controller != null) {
+    //   widget.onVideoInitialized!(_controller!);
+    // }
+
     setState(() {});
   }
 

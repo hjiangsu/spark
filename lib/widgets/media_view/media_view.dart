@@ -55,8 +55,8 @@ class _MediaViewState extends State<MediaView> {
                 showControls: widget.showVideoControls,
                 width: widget.post.video?.width?.toDouble(),
                 height: widget.post.video?.height?.toDouble(),
-                onVideoInitialized: (VideoPlayerController videoController) => setState(() {
-                  videoController = videoController;
+                onVideoInitialized: (VideoPlayerController videoPlayerController) => setState(() {
+                  videoController = videoPlayerController;
                 }),
                 authorizationToken: widget.post.video?.token,
               ),

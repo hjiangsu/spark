@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spark/core/auth/bloc/auth_bloc.dart';
 
 import 'package:spark/core/enums/category_options.dart';
 import 'package:spark/core/enums/front_page_options.dart';
@@ -157,6 +158,8 @@ class _FeedPageState extends State<FeedPage> {
       case FeedStatus.initial:
         if (widget.subreddit != null) {
           context.read<FeedBloc>().add(FeedRefreshed(subreddit: widget.subreddit));
+        } else if (context.read<AuthBloc>().state.isUserAuthorized == true) {
+          context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.home));
         } else {
           context.read<FeedBloc>().add(FeedRefreshed(frontPage: FrontPage.popular));
         }

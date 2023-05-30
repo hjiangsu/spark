@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'package:html_unescape/html_unescape.dart';
+import 'package:spark/core/media/extensions/extensions.dart';
+import 'package:spark/core/models/media/media.dart';
+import 'package:spark/widgets/image_preview/image_preview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommentCardBody extends StatefulWidget {
   String body;
+  Media? media;
 
-  CommentCardBody({super.key, required this.body});
+  CommentCardBody({super.key, required this.body, this.media});
 
   @override
   State<CommentCardBody> createState() => _CommentCardBodyState();
@@ -31,9 +35,52 @@ class _CommentCardBodyState extends State<CommentCardBody> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    List<Widget> content = [
+    List<Widget> content = [];
+
+    String parsedBody = HtmlUnescape().convert(widget.body);
+
+    if (widget.media != null) {
+      print(widget.media?.url);
+      parsedBody = parsedBody.replaceAll(widget.media!.url, '');
+
+      return ImagePreview(
+        url: widget.media!.url,
+        width: widget.media?.width,
+        height: widget.media?.height,
+      );
+    }
+
+    // Look for the links which are pictures
+    // for (String? link in links) {
+    //   if (link!.contains('.jpeg') || link.contains('.png')) {
+    //     content.add(
+    //       FutureBuilder<ImageInfo>(
+    //         future: MediaExtension.getImageInfo(Image.network(link)),
+    //         builder: (context, snapshot) {
+    //           if (snapshot.hasData) {
+    //             Size size = MediaExtension.getScaledMediaSize(width: snapshot.data?.image.width, height: snapshot.data?.image.height);
+
+    //             return ImagePreview(
+    //               url: link,
+    //               width: size.width,
+    //               height: size.height,
+    //             );
+    //           }
+    //           return const SizedBox(
+    //             height: 200,
+    //             child: Center(child: CircularProgressIndicator()),
+    //           );
+    //         },
+    //       ),
+    //     );
+    //     parsedBody = parsedBody.replaceAll(link, '');
+    //   }
+    // }
+
+    // Clean up the markdown body to remove the links from the pictures
+    content.addAll([
       MarkdownBody(
-        data: HtmlUnescape().convert(widget.body),
+        data: parsedBody,
         onTapLink: (text, url, title) {
           launchUrl(Uri.parse(url!));
         },
@@ -45,7 +92,7 @@ class _CommentCardBodyState extends State<CommentCardBody> {
             )),
       ),
       links.isNotEmpty ? const SizedBox(height: 8.0) : Container(),
-    ];
+    ]);
 
     content.addAll(
       links.map((link) {

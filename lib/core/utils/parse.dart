@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:ui';
 
 // External package imports
+import 'package:html_unescape/html_unescape.dart';
 import 'package:reddit/reddit.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 // Spark package imports
 import 'package:spark/core/enums/media_type.dart';
+import 'package:spark/core/media/extensions/extensions.dart';
 import 'package:spark/core/models/media/media.dart';
 import 'package:spark/core/models/reddit_comment/reddit_comment.dart';
 import 'package:spark/core/media/extensions/imgur_media_extension.dart';
@@ -76,6 +79,33 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
   for (Comment comment in comments) {
     List<dynamic> children = comment.children ?? [];
 
+    Media? media;
+
+    try {
+      // Parse media within the comment
+
+      if (comment.information["media_metadata"] != null) {
+        comment.information["media_metadata"].forEach((key, metadata) {
+          String url = metadata["s"]["u"] ?? '';
+          int mediaWidth = metadata["s"]["x"];
+          int mediaHeight = metadata["s"]["y"];
+
+          // Fetch the size dimensions scaled to the current device
+          Size size = MediaExtension.getScaledMediaSize(width: mediaWidth, height: mediaHeight);
+
+          media = Media(
+            url: HtmlUnescape().convert(url),
+            width: size.width,
+            height: size.height,
+            mediaType: MediaType.image,
+          );
+        });
+        print(media);
+      }
+    } catch (e) {
+      print(e);
+    }
+
     redditComments.add(RedditComment(
       id: comment.information["id"],
       authorId: comment.information["author_fullname"] ?? "",
@@ -87,6 +117,7 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
       createdAt: comment.information["created_utc"].toInt() ?? 0,
       replies: parseComments(comment.replies, submissionId: submissionId),
       children: children,
+      media: media,
     ));
   }
 

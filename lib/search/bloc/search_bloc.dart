@@ -12,7 +12,7 @@ import 'package:reddit/reddit.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 
-const throttleDuration = Duration(milliseconds: 300);
+const throttleDuration = Duration(milliseconds: 150);
 
 EventTransformer<E> throttleDroppable<E>(Duration duration) {
   return (events, mapper) => droppable<E>().call(events.throttle(duration), mapper);

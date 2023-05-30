@@ -79,6 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         subscriptions = await user.subscriptions();
       }
 
+      await Future.delayed(const Duration(seconds: 1));
       emit(
         state.copyWith(
           status: AuthStatus.success,
@@ -119,6 +120,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         Redditor user = await reddit.me();
         subscriptions = await user.subscriptions();
       }
+
+      await Future.delayed(const Duration(seconds: 1));
 
       emit(
         state.copyWith(

@@ -11,13 +11,13 @@ class FrontPageDestination {
 
   final String label;
   final FrontPage frontPage;
-  final Icon icon;
+  final IconData icon;
 }
 
 const List<FrontPageDestination> frontPageDestinations = <FrontPageDestination>[
-  FrontPageDestination('Home', FrontPage.home, Icon(Icons.home_rounded)),
-  FrontPageDestination('Popular Posts', FrontPage.popular, Icon(Icons.trending_up_rounded)),
-  FrontPageDestination('All Posts', FrontPage.all, Icon(Icons.grid_view_rounded)),
+  FrontPageDestination('Home', FrontPage.home, Icons.home_rounded),
+  FrontPageDestination('Popular Posts', FrontPage.popular, Icons.trending_up_rounded),
+  FrontPageDestination('All Posts', FrontPage.all, Icons.grid_view_rounded),
 ];
 
 class FeedDrawer extends StatefulWidget {
@@ -47,6 +47,8 @@ class _FeedDrawerState extends State<FeedDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return Drawer(
           child: SafeArea(
@@ -60,6 +62,7 @@ class _FeedDrawerState extends State<FeedDrawer> {
             Column(
               children: frontPageDestinations.map((FrontPageDestination destination) {
                 return FeedDrawerItem(
+                    disabled: destination.frontPage == FrontPage.home && state.isUserAuthorized == false,
                     onTap: () {
                       context.read<SparkBloc>().state.feedContext?.read<FeedBloc>().add(FeedRefreshed(frontPage: destination.frontPage));
                       context.pop();
@@ -106,7 +109,13 @@ class _FeedDrawerState extends State<FeedDrawer> {
                       ),
                     ),
                   )
-                : Container()
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 8.0),
+                    child: Text(
+                      'No subscriptions available',
+                      style: theme.textTheme.labelLarge?.copyWith(color: theme.dividerColor),
+                    ),
+                  )
           ],
         ),
       ));
@@ -117,36 +126,37 @@ class _FeedDrawerState extends State<FeedDrawer> {
 class FeedDrawerItem extends StatelessWidget {
   final VoidCallback onTap;
   final String label;
-  final Icon icon;
+  final IconData icon;
 
-  const FeedDrawerItem({super.key, required this.onTap, required this.label, required this.icon});
+  final bool disabled;
+
+  const FeedDrawerItem({super.key, required this.onTap, required this.label, required this.icon, this.disabled = false});
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: SizedBox(
         height: 56.0,
         child: InkWell(
+          splashColor: disabled ? Colors.transparent : null,
           highlightColor: Colors.transparent,
-          onTap: onTap,
+          onTap: disabled ? null : onTap,
           customBorder: const StadiumBorder(),
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              // NavigationIndicator(
-              //   animation: info.selectedAnimation,
-              //   color: info.indicatorColor ?? navigationDrawerTheme.indicatorColor ?? defaults.indicatorColor!,
-              //   shape: info.indicatorShape ?? navigationDrawerTheme.indicatorShape ?? defaults.indicatorShape!,
-              //   width: (navigationDrawerTheme.indicatorSize ?? defaults.indicatorSize!).width,
-              //   height: (navigationDrawerTheme.indicatorSize ?? defaults.indicatorSize!).height,
-              // ),
               Row(
                 children: <Widget>[
                   const SizedBox(width: 16),
-                  icon,
+                  Icon(icon, color: disabled ? theme.dividerColor : null),
                   const SizedBox(width: 12),
-                  Text(label),
+                  Text(
+                    label,
+                    style: disabled ? theme.textTheme.bodyMedium?.copyWith(color: theme.dividerColor) : null,
+                  ),
                 ],
               ),
             ],

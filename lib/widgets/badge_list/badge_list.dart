@@ -35,7 +35,7 @@ class BadgeList extends StatelessWidget {
                 darkThemeColor: Color.fromARGB(99, 56, 142, 60),
               )
             : Container(),
-        post.text != null && !post.pinned
+        post.text == true && !post.pinned
             ? const SubmissionBadge(
                 label: 'TEXT',
                 lightThemeColor: Color.fromARGB(95, 45, 123, 168),

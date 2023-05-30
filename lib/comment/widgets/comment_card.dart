@@ -124,7 +124,7 @@ class _CommentCardState extends State<CommentCard> {
                   opacity: isHidden ? 0.0 : 1.0,
                   curve: Curves.fastOutSlowIn,
                   duration: const Duration(milliseconds: 200),
-                  child: isHidden ? Container() : CommentCardBody(body: widget.comment.body),
+                  child: isHidden ? Container() : CommentCardBody(body: widget.comment.body, media: widget.comment.media),
                 ),
               ),
             ],

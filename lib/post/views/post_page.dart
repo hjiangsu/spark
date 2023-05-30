@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/comment/comment.dart';
 
 import 'package:spark/feed/widgets/post_heading.dart';
@@ -12,11 +13,34 @@ import 'package:spark/widgets/error_message/error_message.dart';
 import 'package:spark/widgets/link_preview_card/link_preview_card.dart';
 import 'package:spark/widgets/media_view/media_view.dart';
 
-class PostPage extends StatelessWidget {
-  PostPage({super.key, required this.postId});
+class PostPage extends StatefulWidget {
+  const PostPage({super.key, required this.postId});
 
   final String postId;
+
+  @override
+  State<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends State<PostPage> {
   final GlobalKey scrollControllerKey = GlobalKey();
+
+  bool showOriginalURL = false;
+
+  Future<void> _initPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? _showOriginalURL = prefs.getBool('showOriginalURL');
+
+    setState(() {
+      showOriginalURL = _showOriginalURL ?? false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initPreferences());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +51,7 @@ class PostPage extends StatelessWidget {
         child: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
           switch (state.status) {
             case PostStatus.initial:
-              context.read<PostBloc>().add(PostRefreshed(postId: postId));
+              context.read<PostBloc>().add(PostRefreshed(postId: widget.postId));
               return const Center(child: CircularProgressIndicator());
             case PostStatus.loading:
               return const Center(child: CircularProgressIndicator());
@@ -64,7 +88,7 @@ class PostPage extends StatelessWidget {
                                   )
                                 : Container(),
                             const SizedBox(height: 8.0),
-                            LinkPreviewCard(originURL: state.post!.url),
+                            if (state.post?.url != null && showOriginalURL) LinkPreviewCard(originURL: state.post!.url),
                           ],
                         ),
                       ),

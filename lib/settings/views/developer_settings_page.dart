@@ -314,3 +314,113 @@
 //     );
 //   }
 // }
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:spark/core/theme/bloc/theme_bloc.dart';
+
+class DeveloperSettingsPage extends StatefulWidget {
+  const DeveloperSettingsPage({super.key});
+
+  @override
+  State<DeveloperSettingsPage> createState() => _DeveloperSettingsPageState();
+}
+
+class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
+  bool isLoading = true;
+
+  bool showOriginalURL = false;
+
+  void setPreferences(attribute, value) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    switch (attribute) {
+      case 'showOriginalURL':
+        await prefs.setBool('showOriginalURL', value);
+        context.read<ThemeBloc>().add(ThemeRefreshed());
+        break;
+    }
+  }
+
+  void _initPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      showOriginalURL = prefs.getBool('showOriginalURL') ?? false;
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initPreferences());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('General'),
+        centerTitle: false,
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: developerSettings(),
+                  ),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget developerSettings() {
+    final theme = Theme.of(context);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Debug',
+            style: theme.textTheme.titleLarge,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(showOriginalURL ? Icons.link_rounded : Icons.link_off_rounded),
+                const SizedBox(width: 8.0),
+                Text(
+                  'Show original URLs',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            Switch(
+              value: showOriginalURL,
+              onChanged: (bool value) {
+                HapticFeedback.lightImpact();
+                setPreferences('showOriginalURL', value);
+                setState(() => showOriginalURL = !showOriginalURL);
+              },
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}

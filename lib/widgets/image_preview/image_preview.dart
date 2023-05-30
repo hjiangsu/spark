@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,19 +9,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 class ImagePreview extends StatefulWidget {
   final String url;
   final bool nsfw;
-  final double height;
-  final double width;
+  final double? height;
+  final double? width;
   final bool isGallery;
 
-  const ImagePreview({super.key, required this.url, required this.height, required this.width, this.nsfw = false, this.isGallery = false});
+  const ImagePreview({super.key, required this.url, this.height, this.width, this.nsfw = false, this.isGallery = false});
 
   @override
   State<ImagePreview> createState() => _ImagePreviewState();
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
-  PhotoViewController photoViewController = PhotoViewController();
-
   bool blur = false;
   double endBlur = 15;
   double startBlur = 0;
@@ -32,31 +31,7 @@ class _ImagePreviewState extends State<ImagePreview> {
   }
 
   void onImageTap() {
-    final theme = Theme.of(context);
-
-    Navigator.push(context, MaterialPageRoute<void>(
-      builder: (BuildContext context) {
-        return Scaffold(
-          body: SafeArea(
-            child: Stack(
-              alignment: Alignment.topRight,
-              children: [
-                PhotoView(
-                  controller: photoViewController,
-                  imageProvider: CachedNetworkImageProvider(widget.url),
-                  backgroundDecoration: BoxDecoration(color: theme.cardColor),
-                ),
-                IconButton(
-                  color: theme.textTheme.titleLarge!.color,
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    ));
+    GoRouter.of(context).push('${GoRouter.of(context).location}/image', extra: {'url': widget.url});
   }
 
   @override
@@ -73,8 +48,8 @@ class _ImagePreviewState extends State<ImagePreview> {
                   imageUrl: widget.url,
                   height: widget.isGallery ? null : widget.height,
                   width: widget.isGallery ? null : widget.width,
-                  memCacheHeight: widget.height.toInt(),
-                  memCacheWidth: widget.width.toInt(),
+                  memCacheHeight: widget.height?.toInt(),
+                  memCacheWidth: widget.width?.toInt(),
                   fit: BoxFit.fitWidth,
                   progressIndicatorBuilder: (context, url, downloadProgress) => Container(
                     color: Colors.grey.shade900,

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/core/auth/bloc/auth_bloc.dart';
 import 'package:spark/feed/widgets/feed_drawer.dart';
 import 'package:spark/core/spark/spark.dart';
+import 'package:spark/splash/splash.dart';
 
 import 'package:spark/widgets/bottom_app_bar/bottom_app_bar.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
@@ -88,7 +89,6 @@ class _ScaffoldNavBarState extends State<ScaffoldNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    print(GoRouter.of(context).location);
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) => {
         if (state.status == AuthStatus.success) {GoRouter.of(context).go('/feed')}
@@ -97,9 +97,9 @@ class _ScaffoldNavBarState extends State<ScaffoldNavBar> {
         switch (state.status) {
           case AuthStatus.initial:
           case AuthStatus.loading:
-            return const Center(child: SizedBox(width: 30, height: 30, child: CircularProgressIndicator()));
+            return const SplashPage(splashText: '');
           case AuthStatus.success:
-            FlutterNativeSplash.remove();
+            // FlutterNativeSplash.remove();
             return Scaffold(
               key: scaffoldKey,
               body: widget.child,
