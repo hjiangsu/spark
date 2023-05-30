@@ -122,6 +122,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           }
         },
         child: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
             Chewie(key: widget.key, controller: _chewie!),
             TweenAnimationBuilder<double>(
@@ -136,7 +137,16 @@ class _VideoPlayerState extends State<VideoPlayer> {
               child: DecoratedBox(
                 decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
               ),
-            )
+            ),
+            VideoProgressIndicator(
+              _controller!,
+              colors: VideoProgressColors(
+                backgroundColor: Colors.grey.shade900,
+                playedColor: Colors.white,
+                bufferedColor: Colors.grey.shade900,
+              ),
+              allowScrubbing: true,
+            ),
           ],
         ),
       );

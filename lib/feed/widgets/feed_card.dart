@@ -159,28 +159,31 @@ class _FeedCardState extends State<FeedCard> {
                         IntrinsicHeight(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              BadgeList(post: widget.post),
+                              // BadgeList(post: widget.post),
                               IntrinsicHeight(
                                 child: Row(
                                   children: [
                                     IconText(
                                       text: formatNumberToK(widget.post.upvoteCount),
                                       leadingIcon: Icons.arrow_upward,
-                                      leadingIconColor: widget.post.upvoted == true ? Colors.amber.shade700 : null,
-                                      suffixIcon: Icons.arrow_downward,
-                                      suffixIconColor: widget.post.downvoted == true ? Colors.blue.shade600 : null,
-                                      onTap: () {
-                                        // placeholder for logic to upvote, downvote, or no vote submissions
-                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to upvote')));
-                                      },
-                                      onDoubleTap: () {
-                                        // placeholder for logic to upvote, downvote, or no vote submissions
-                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to downvote')));
-                                      },
+                                      textColor: widget.post.upvoted
+                                          ? Colors.orange
+                                          : widget.post.downvoted
+                                              ? Colors.blue
+                                              : null,
+                                      // suffixIcon: Icons.arrow_downward,
+                                      // suffixIconColor: widget.post.downvoted == true ? Colors.blue.shade600 : null,
+                                      // onTap: () {
+                                      //   // placeholder for logic to upvote, downvote, or no vote submissions
+                                      //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to upvote')));
+                                      // },
+                                      // onDoubleTap: () {
+                                      //   // placeholder for logic to upvote, downvote, or no vote submissions
+                                      //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to downvote')));
+                                      // },
                                     ),
                                     const SizedBox(width: 12.0),
                                     IconText(
@@ -188,6 +191,39 @@ class _FeedCardState extends State<FeedCard> {
                                       text: formatNumberToK(widget.post.commentCount),
                                     ),
                                     const SizedBox(width: 4.0),
+                                  ],
+                                ),
+                              ),
+                              IntrinsicHeight(
+                                child: Row(
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: true));
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_upward,
+                                        color: widget.post.upvoted ? Colors.orange : null,
+                                      ),
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: false));
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_downward,
+                                        color: widget.post.downvoted ? Colors.blue : null,
+                                      ),
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.read<FeedBloc>().add(FeedPostSaved(postId: widget.post.id));
+                                      },
+                                      icon: Icon(widget.post.saved ? Icons.bookmark : Icons.bookmark_border_rounded),
+                                      visualDensity: VisualDensity.compact,
+                                    ),
                                   ],
                                 ),
                               ),
