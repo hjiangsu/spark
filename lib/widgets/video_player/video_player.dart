@@ -141,9 +141,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
             VideoProgressIndicator(
               _controller!,
               colors: VideoProgressColors(
-                backgroundColor: Colors.grey.shade900,
+                backgroundColor: Colors.grey.shade900.withOpacity(0.25),
                 playedColor: Colors.white,
-                bufferedColor: Colors.grey.shade900,
+                bufferedColor: Colors.grey.shade900.withOpacity(0.25),
               ),
               allowScrubbing: true,
             ),
