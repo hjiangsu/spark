@@ -26,13 +26,13 @@
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#roadmap">Roadmap</a> •
-  <a href="#contributing">Contributing</a> •
+  <a href="#contributing">Contributing</a>
 </p>
 
 <p align="center">
-  <a href="#build">Build</a> •
+  <a href="#building">Building</a> •
   <a href="#conventions">Conventions</a> •
-  <a href="#related">Related Packages</a> •
+  <a href="#related-packages">Related Packages</a>
 </p>
 
 ## Features
@@ -69,7 +69,7 @@ Contributions are always welcomed here! To contribute features or bug-fixes:
 
 More information regarding contributions will be added in the future.
 
-## Build
+## Building
 Building the release files depends on the platform.
 - iOS: `flutter build ios --release`
 - Android: `flutter build apk`
