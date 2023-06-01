@@ -8,7 +8,7 @@
 </h1>
 
 <h4 align="center">
-    An open source, cross-platform Reddit client built with <a href="https://flutter.dev/" target="_blank">Flutter</a>.
+    An open source, cross-platform Reddit client built with <a href="https://flutter.dev/" target="_blank">Flutter</a>
 </h4>
 
 <p align="center">
@@ -25,11 +25,12 @@
 
 <p align="center">
   <a href="#features">Features</a> •
-  <a href="#roadmap">Roadmap</a> •
-  <a href="#contributing">Contributing</a>
+  <a href="#roadmap">Roadmap</a>
+ 
 </p>
 
 <p align="center">
+   <a href="#contributing">Contributing</a> •
   <a href="#building">Building</a> •
   <a href="#conventions">Conventions</a> •
   <a href="#related-packages">Related Packages</a>
@@ -62,39 +63,26 @@ Currently, work is in progress to add in more support for user actions when logg
 - Increased native platform support for Windows, MacOS, and Linux
 
 ## Contributing
-Contributions are always welcomed here! To contribute features or bug-fixes:
+Contributions are always welcome! To contribute potential features or bug-fixes:
 1. Fork this repository
-2. Make your changes and additions
-3. Create a pull request to have your changes reviewed
-
-More information regarding contributions will be added in the future.
+2. Apply any changes and/or additions
+3. Create a pull request to have your changes reviewed and merged
 
 ## Building
-Building the release files depends on the platform.
-- iOS: `flutter build ios --release`
-- Android: `flutter build apk`
+To build the app from source, a few steps are required.
+1. Create a `.env` file in the root directory where `pubspec.yaml` is located. A template is provided under `.env-example`
+2. Set up and install Flutter. For more information, visit https://docs.flutter.dev/get-started/install
+3. Obtain the dependencies using `flutter pub get`
+4. Run the appropriate build command depending on the platform.
+   - iOS: `flutter build ios --release`
+   - Android: `flutter build apk`
 
 Note: If Sentry is used for collecting error information, the corresponding debug symbols must be uploaded. This can be done using the following command: `flutter packages pub run sentry_dart_plugin`
 
 ## Conventions
-This section lists some of the conventions used by the project to keep consistent behaviour and layouts.
-
-### File Structure
-The file structure is separated mainly by features. Each feature of the application will be hosted in its corresponding directory. For example, logic related to a Feed will be under the `lib/feed` directory.
-
-Shared logic across features will be located under `lib/`. For example:
-- Shared widgets will be located under `lib/widgets`.
-- Shared enums will be located under `lib/enums`.
-
-### BLoC
-This project uses BLoC as the state management library for most actions. Spark currently uses the following packages for handling state management:
-- [bloc](https://github.com/felangel/bloc/tree/master/packages/bloc) - handles general BLoC implementation schemes
-- [bloc_test](https://github.com/felangel/bloc/tree/master/packages/bloc_test) - handles testing of BLoC related logic
-- [bloc_concurrency](https://github.com/felangel/bloc/tree/master/packages/bloc_concurrency) - handles custom event transformers for BLoC related logic
-- [flutter_bloc](https://github.com/felangel/bloc/tree/master/packages/flutter_bloc) - handles integration of BLoCs into Flutter
-
-To learn more about BLoC and how it is used in Spark, reference the official [docs](https://bloclibrary.dev/#/).
+While there are no specific conventions that must be followed, do try to follow best practices whenever possible.
 
 ## Related Packages
 
-[reddit-dart](https://github.com/hjiangsu/reddit-dart) - Custom Reddit library built in Dart.
+[reddit-dart](https://github.com/hjiangsu/reddit-dart) - Custom Reddit library built in Dart.  
+[imgur-dart](https://github.com/hjiangsu/imgur-dart) - Custom Imgur library built in Dart.
