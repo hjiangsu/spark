@@ -494,7 +494,7 @@ packages:
       path: "."
       ref: "v0.1.1-alpha"
       resolved-ref: c1bc1d9b89d4d32bcdf0e55fa9587b7898fbae39
-      url: "git@github.com:hjiangsu/imgur-dart.git"
+      url: "https://github.com/hjiangsu/imgur-dart.git"
     source: git
     version: "0.1.0-alpha"
   injector:
@@ -791,7 +791,7 @@ packages:
       path: "."
       ref: "v0.1.18-alpha"
       resolved-ref: "0c7397bf292e517e1fcae048c42103577562f0f8"
-      url: "git@github.com:hjiangsu/reddit-dart.git"
+      url: "https://github.com/hjiangsu/reddit-dart.git"
     source: git
     version: "0.1.11-alpha"
   rxdart:

@@ -30,11 +30,11 @@ dependencies:
     sdk: flutter
   reddit:
     git:
-      url: git@github.com:hjiangsu/reddit-dart.git
+      url: https://github.com/hjiangsu/reddit-dart.git
       ref: v0.1.18-alpha
   imgur:
     git:
-      url: git@github.com:hjiangsu/imgur-dart.git
+      url: https://github.com/hjiangsu/imgur-dart.git
       ref: v0.1.1-alpha
   cupertino_icons: ^1.0.2
   bloc: ^8.1.1
