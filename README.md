@@ -26,20 +26,40 @@
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#roadmap">Roadmap</a> •
-  <a href="#contributions">Contributing</a> •
-  <a href="#contributions">Conventions</a> •
-  <a href="#license">Related Packages</a>
+  <a href="#contributing">Contributing</a> •
+</p>
+
+<p align="center">
+  <a href="#build">Build</a> •
+  <a href="#conventions">Conventions</a> •
+  <a href="#related">Related Packages</a> •
 </p>
 
 ## Features
-Spark is currently under heavy and active development. Some current features include:
-- Ability to browse and search for subreddits
-- Ability to see post information and comments
-- Ability to authenticate with Reddit via OAuth to obtain user feeds and subreddits
+Spark is still under **development**, and all features may not be present yet. The following features are currently implemented.
+
+#### **Subreddits & Feeds**
+- Browse front pages including _r/popular_ and _r/all_
+- Ability to sort feeds and subreddits by **best**, **hot**, **new**, and **rising**
+- Ability to search for a specific subreddit
+
+#### **Posts**
+- Browse post and view associated comments
+- Upvote, downvote, and save posts (if logged in via OAuth)
+- Video autoplay when scrolling into view
+
+#### **Authentication**
+- Ability to authenticate via OAuth through Reddit
+- View subscribed subreddits
+
+#### **Theme & Customization**
+- Ability to change theme colours
+- Ability to adjust font sizes
 
 ## Roadmap
+Currently, work is in progress to add in more support for user actions when logged in. Some features on the roadmap are listed below.
+- See post awards
 - Increased native platform support for Windows, MacOS, and Linux
-- Native biometrics support and security 
 
 ## Contributing
 Contributions are always welcomed here! To contribute features or bug-fixes:
