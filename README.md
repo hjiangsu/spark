@@ -87,11 +87,11 @@ Contributions are always welcome! To contribute potential features or bug-fixes:
 ## Building
 
 To build the app from source, a few steps are required.
-
-1. Create a `.env` file in the root directory where `pubspec.yaml` is located. A template is provided under `.env-example`
-2. Set up and install Flutter. For more information, visit https://docs.flutter.dev/get-started/install
-3. Obtain the dependencies using `flutter pub get`
-4. Run the appropriate build command depending on the platform.
+1. Create a `.env` file in the root directory where `pubspec.yaml` is located.
+   - A template is provided under `.env-example` that can be filled in.
+3. Set up and install Flutter. For more information, visit https://docs.flutter.dev/get-started/install
+4. Obtain the dependencies using `flutter pub get`
+5. Run the appropriate build command depending on the platform.
    - iOS: `flutter build ios --release`
    - Android: `flutter build apk`
 
