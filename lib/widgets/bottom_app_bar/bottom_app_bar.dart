@@ -55,7 +55,12 @@ class _ActionBarState extends State<ActionBar> {
   void _onItemTapped(BuildContext context, int index) {
     if (index != _currentIndex) {
       GoRouter.of(context).go(bottomAppBarItems[index].initialLocation);
-      // context.go(bottomAppBarItems[index].initialLocation);
+    } else if (index == _currentIndex && index == 0) {
+      context.read<SparkBloc>().state.feedScrollController?.animateTo(
+            0,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOutCubic,
+          );
     }
   }
 

@@ -83,7 +83,6 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
 
     try {
       // Parse media within the comment
-
       if (comment.information["media_metadata"] != null) {
         comment.information["media_metadata"].forEach((key, metadata) {
           String url = metadata["s"]["u"] ?? '';
@@ -100,7 +99,6 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
             mediaType: MediaType.image,
           );
         });
-        print(media);
       }
     } catch (e) {
       print(e);
@@ -109,6 +107,7 @@ dynamic parseComments(List<Comment>? comments, {required String submissionId}) {
     redditComments.add(RedditComment(
       id: comment.information["id"],
       authorId: comment.information["author_fullname"] ?? "",
+      moderator: comment.information["distinguished"] != null && comment.information["distinguished"] == "moderator",
       subredditId: comment.information["subreddit_id"],
       submissionId: submissionId,
       author: comment.information["author"],

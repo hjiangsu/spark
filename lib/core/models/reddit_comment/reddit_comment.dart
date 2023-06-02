@@ -13,6 +13,7 @@ class RedditComment {
     this.replies = const [],
     this.children = const [],
     this.media,
+    this.moderator = false,
   });
 
   // In this context, the ids are the fullnames of the submission
@@ -31,4 +32,5 @@ class RedditComment {
   int createdAt;
 
   Media? media;
+  bool moderator;
 }

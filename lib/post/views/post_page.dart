@@ -99,6 +99,7 @@ class _PostPageState extends State<PostPage> {
                       CommentView(
                         submissionId: state.post!.id,
                         subreddit: state.post!.subreddit,
+                        postAuthor: state.post!.author,
                       ),
                     ],
                   ),

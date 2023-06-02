@@ -18,6 +18,7 @@ class CommentCard extends StatefulWidget {
     required this.comment,
     this.level = 0,
     this.collapsed = false,
+    required this.postAuthor,
   });
 
   /// Comment containing relevant information
@@ -28,6 +29,8 @@ class CommentCard extends StatefulWidget {
 
   /// Whether the comment is collapsed or expanded
   bool collapsed;
+
+  String postAuthor;
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -91,7 +94,11 @@ class _CommentCardState extends State<CommentCard> {
                             Text(
                               HtmlUnescape().convert(widget.comment.author),
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSecondaryContainer,
+                                color: widget.comment.moderator
+                                    ? theme.colorScheme.tertiary
+                                    : widget.postAuthor == widget.comment.author
+                                        ? Colors.amber
+                                        : theme.colorScheme.onSecondaryContainer,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -144,6 +151,7 @@ class _CommentCardState extends State<CommentCard> {
                   comment: widget.comment.replies[index],
                   level: widget.level + 1,
                   collapsed: widget.level > 2,
+                  postAuthor: widget.postAuthor,
                 ),
                 itemCount: isHidden ? 0 : widget.comment.replies?.length,
               ),

@@ -51,7 +51,7 @@ const categoryOptionsItems = [
   CategoryOptionItem(
     categoryOption: CategoryOptions.rising,
     icon: Icons.auto_graph_rounded,
-    label: 'Best',
+    label: 'Rising',
   ),
 ];
 

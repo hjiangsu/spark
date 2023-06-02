@@ -8,6 +8,7 @@ class SparkState extends Equatable {
     this.scaffoldKey,
     this.feedContext,
     this.rateLimitUsage,
+    this.feedScrollController,
   });
 
   final SparkStatus status;
@@ -18,6 +19,9 @@ class SparkState extends Equatable {
   /// The scaffold key is kept in the state in order for the feed page to access the app scaffold
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
+  /// The scroll controller for the main feed page
+  final ScrollController? feedScrollController;
+
   /// The rate limit is kept in the state in order for debugging purposes
   final int? rateLimitUsage;
 
@@ -26,12 +30,14 @@ class SparkState extends Equatable {
     BuildContext? feedContext,
     GlobalKey<ScaffoldState>? scaffoldKey,
     int? rateLimitUsage,
+    ScrollController? feedScrollController,
   }) {
     return SparkState(
       status: status ?? this.status,
       feedContext: feedContext ?? this.feedContext,
       scaffoldKey: scaffoldKey ?? this.scaffoldKey,
       rateLimitUsage: rateLimitUsage ?? this.rateLimitUsage,
+      feedScrollController: feedScrollController ?? this.feedScrollController,
     );
   }
 

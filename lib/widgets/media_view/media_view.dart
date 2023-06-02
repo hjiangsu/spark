@@ -43,7 +43,7 @@ class _MediaViewState extends State<MediaView> {
               onVisibilityChanged: (visibilityInfo) {
                 double visiblePercentage = visibilityInfo.visibleFraction * 100;
 
-                if (visiblePercentage > 90) {
+                if (visiblePercentage > 80) {
                   videoController?.play();
                 } else {
                   videoController?.pause();

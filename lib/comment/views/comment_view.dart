@@ -15,10 +15,11 @@ class CommentView extends StatelessWidget {
   final String? subreddit;
   final String submissionId;
   final String? commentId;
+  final String postAuthor;
 
   final GlobalKey commentListKey = GlobalKey();
 
-  CommentView({super.key, required this.submissionId, this.commentId, this.subreddit});
+  CommentView({super.key, required this.submissionId, this.commentId, this.subreddit, required this.postAuthor});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,10 @@ class CommentView extends StatelessWidget {
                     message: 'Fetch more comments...',
                   );
                 } else {
-                  return CommentCard(comment: state.comments[index]);
+                  return CommentCard(
+                    comment: state.comments[index],
+                    postAuthor: postAuthor,
+                  );
                 }
               },
               itemCount: state.children.isNotEmpty ? state.comments.length + 1 : state.comments.length,

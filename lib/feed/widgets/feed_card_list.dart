@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spark/core/spark/spark.dart';
 
 import 'package:spark/core/theme/bloc/theme_bloc.dart';
 import 'package:spark/core/enums/category_options.dart';
@@ -29,11 +30,14 @@ class _FeedCardListState extends State<FeedCardList> {
   @override
   void initState() {
     _scrollController.addListener(_onScroll);
+    context.read<SparkBloc>().add(FeedScrollControllerChanged(scrollController: _scrollController));
     super.initState();
   }
 
   @override
   void dispose() {
+    context.read<SparkBloc>().add(const FeedScrollControllerChanged(scrollController: null));
+
     _scrollController.dispose();
     super.dispose();
   }

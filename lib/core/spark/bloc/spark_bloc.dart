@@ -29,5 +29,10 @@ class SparkBloc extends Bloc<SparkEvent, SparkState> {
       emit(state.copyWith(status: SparkStatus.loading));
       emit(state.copyWith(status: SparkStatus.success, rateLimitUsage: event.rateLimitUsage));
     });
+
+    on<FeedScrollControllerChanged>((event, emit) {
+      emit(state.copyWith(status: SparkStatus.loading));
+      emit(state.copyWith(status: SparkStatus.success, feedScrollController: event.scrollController));
+    });
   }
 }

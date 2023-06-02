@@ -24,3 +24,9 @@ class RateLimitChanged extends SparkEvent {
 
   const RateLimitChanged({required this.rateLimitUsage});
 }
+
+class FeedScrollControllerChanged extends SparkEvent {
+  final ScrollController? scrollController;
+
+  const FeedScrollControllerChanged({this.scrollController});
+}

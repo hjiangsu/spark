@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/utils/datetime.dart';
 import 'package:spark/core/utils/numbers.dart';
 import 'package:spark/feed/bloc/feed_bloc.dart';
 import 'package:spark/feed/widgets/post_heading.dart';
@@ -144,97 +146,95 @@ class _FeedCardState extends State<FeedCard> {
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-            child: IntrinsicHeight(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  MediaView(post: widget.post),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        PostHeading(post: widget.post),
-                        IntrinsicHeight(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // BadgeList(post: widget.post),
-                              IntrinsicHeight(
-                                child: Row(
-                                  children: [
-                                    IconText(
-                                      text: formatNumberToK(widget.post.upvoteCount),
-                                      leadingIcon: Icons.arrow_upward,
-                                      textColor: widget.post.upvoted
-                                          ? Colors.orange
-                                          : widget.post.downvoted
-                                              ? Colors.blue
-                                              : null,
-                                      // suffixIcon: Icons.arrow_downward,
-                                      // suffixIconColor: widget.post.downvoted == true ? Colors.blue.shade600 : null,
-                                      // onTap: () {
-                                      //   // placeholder for logic to upvote, downvote, or no vote submissions
-                                      //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to upvote')));
-                                      // },
-                                      // onDoubleTap: () {
-                                      //   // placeholder for logic to upvote, downvote, or no vote submissions
-                                      //   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(behavior: SnackBarBehavior.floating, content: Text('Placeholder for logic to downvote')));
-                                      // },
-                                    ),
-                                    const SizedBox(width: 12.0),
-                                    IconText(
-                                      leadingIcon: Icons.chat,
-                                      text: formatNumberToK(widget.post.commentCount),
-                                    ),
-                                    const SizedBox(width: 4.0),
-                                  ],
-                                ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MediaView(post: widget.post),
+                Text(
+                  HtmlUnescape().convert(widget.post.title),
+                  style: theme.textTheme.titleMedium,
+                  softWrap: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6.0, bottom: 4.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'r/${widget.post.subreddit}',
+                              style: theme.textTheme.titleSmall?.copyWith(
+                                fontSize: theme.textTheme.bodyLarge!.fontSize! * 1.05,
+                                color: theme.textTheme.titleSmall?.color?.withOpacity(0.75),
                               ),
-                              IntrinsicHeight(
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: true));
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_upward,
-                                        color: widget.post.upvoted ? Colors.orange : null,
-                                      ),
-                                      visualDensity: VisualDensity.compact,
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: false));
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_downward,
-                                        color: widget.post.downvoted ? Colors.blue : null,
-                                      ),
-                                      visualDensity: VisualDensity.compact,
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.read<FeedBloc>().add(FeedPostSaved(postId: widget.post.id));
-                                      },
-                                      icon: Icon(widget.post.saved ? Icons.bookmark : Icons.bookmark_border_rounded),
-                                      visualDensity: VisualDensity.compact,
-                                    ),
-                                  ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconText(
+                                  text: formatNumberToK(widget.post.upvoteCount),
+                                  icon: const Icon(Icons.arrow_upward, size: 20.0),
+                                  textColor: widget.post.upvoted
+                                      ? Colors.orange
+                                      : widget.post.downvoted
+                                          ? Colors.blue
+                                          : null,
                                 ),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(width: 12.0),
+                                IconText(
+                                  icon: const Icon(Icons.chat, size: 18.0),
+                                  text: formatNumberToK(widget.post.commentCount),
+                                ),
+                                const SizedBox(width: 10.0),
+                                IconText(
+                                  icon: const Icon(Icons.history_rounded, size: 20.0),
+                                  text: formatTimeToString(epochTime: widget.post.createdAt.toInt()),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: true));
+                            },
+                            icon: Icon(
+                              Icons.arrow_upward,
+                              color: widget.post.upvoted ? Colors.orange : null,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              context.read<FeedBloc>().add(FeedPostVoted(postId: widget.post.id, vote: false));
+                            },
+                            icon: Icon(
+                              Icons.arrow_downward,
+                              color: widget.post.downvoted ? Colors.blue : null,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              context.read<FeedBloc>().add(FeedPostSaved(postId: widget.post.id));
+                            },
+                            icon: Icon(widget.post.saved ? Icons.bookmark : Icons.bookmark_border_rounded),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
           onTap: () {
