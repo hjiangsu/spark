@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 // External package imports
+import 'package:flutter/widgets.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:reddit/reddit.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -15,6 +16,7 @@ import 'package:spark/core/media/extensions/imgur_media_extension.dart';
 import 'package:spark/core/media/extensions/custom_media_extension.dart';
 import 'package:spark/core/media/extensions/reddit_media_extension.dart';
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
+import 'package:spark/core/utils/link.dart';
 
 /// Parse a submission retrieved from the Reddit library.
 Future<RedditSubmission> parseSubmission(Submission submission) async {
@@ -41,7 +43,24 @@ Future<RedditSubmission> parseSubmission(Submission submission) async {
     List<Media> mediaList = await customMediaExtension.getMediaInformation(url);
     mediaLinks.addAll(mediaList);
   } else {
-    mediaLinks.add(Media(url: url, mediaType: MediaType.link));
+    // For external links, attempt to fetch any media associated with it (image, title)
+    LinkInfo linkInfo = await getLinkInfo(url);
+
+    if (linkInfo.imageURL != null && linkInfo.imageURL!.isNotEmpty) {
+      try {
+        ImageInfo imageInfo = await MediaExtension.getImageInfo(Image.network(linkInfo.imageURL!));
+        int mediaHeight = imageInfo.image.height;
+        int mediaWidth = imageInfo.image.width;
+        Size size = MediaExtension.getScaledMediaSize(width: mediaWidth, height: mediaHeight);
+
+        mediaLinks.add(Media(url: linkInfo.imageURL!, mediaType: MediaType.link, originalURL: url, height: size.height, width: size.width));
+      } catch (e) {
+        // Default back to a link
+        mediaLinks.add(Media(mediaType: MediaType.link, originalURL: url));
+      }
+    } else {
+      mediaLinks.add(Media(mediaType: MediaType.link, originalURL: url));
+    }
   }
 
   // Generate Post from Submission

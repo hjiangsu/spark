@@ -50,6 +50,8 @@ class _RedditorFeedCardListState extends State<RedditorFeedCardList> {
         context.read<RedditorBloc>().add(RedditorSubmissionsRefreshed());
       },
       child: ListView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         controller: _scrollController,
         itemCount: widget.posts.length + 1,
         itemBuilder: (context, index) {

@@ -8,8 +8,6 @@ import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/core/utils/datetime.dart';
 import 'package:spark/core/utils/numbers.dart';
 import 'package:spark/feed/bloc/feed_bloc.dart';
-import 'package:spark/feed/widgets/post_heading.dart';
-import 'package:spark/widgets/badge_list/badge_list.dart';
 
 import 'package:spark/widgets/icon_text/icon_text.dart';
 import 'package:spark/widgets/media_view/media_view.dart';
@@ -167,7 +165,7 @@ class _FeedCardState extends State<FeedCard> {
                             Text(
                               'r/${widget.post.subreddit}',
                               style: theme.textTheme.titleSmall?.copyWith(
-                                fontSize: theme.textTheme.bodyLarge!.fontSize! * 1.05,
+                                fontSize: theme.textTheme.titleSmall!.fontSize! * 1.05,
                                 color: theme.textTheme.titleSmall?.color?.withOpacity(0.75),
                               ),
                             ),
@@ -177,21 +175,35 @@ class _FeedCardState extends State<FeedCard> {
                               children: [
                                 IconText(
                                   text: formatNumberToK(widget.post.upvoteCount),
-                                  icon: const Icon(Icons.arrow_upward, size: 20.0),
+                                  icon: Icon(
+                                    Icons.arrow_upward,
+                                    size: 18.0,
+                                    color: theme.textTheme.titleSmall?.color?.withOpacity(0.75),
+                                  ),
                                   textColor: widget.post.upvoted
                                       ? Colors.orange
                                       : widget.post.downvoted
                                           ? Colors.blue
                                           : null,
+                                  padding: 2.0,
                                 ),
                                 const SizedBox(width: 12.0),
                                 IconText(
-                                  icon: const Icon(Icons.chat, size: 18.0),
+                                  icon: Icon(
+                                    Icons.chat,
+                                    size: 17.0,
+                                    color: theme.textTheme.titleSmall?.color?.withOpacity(0.75),
+                                  ),
                                   text: formatNumberToK(widget.post.commentCount),
+                                  padding: 5.0,
                                 ),
                                 const SizedBox(width: 10.0),
                                 IconText(
-                                  icon: const Icon(Icons.history_rounded, size: 20.0),
+                                  icon: Icon(
+                                    Icons.history_rounded,
+                                    size: 19.0,
+                                    color: theme.textTheme.titleSmall?.color?.withOpacity(0.75),
+                                  ),
                                   text: formatTimeToString(epochTime: widget.post.createdAt.toInt()),
                                 ),
                               ],

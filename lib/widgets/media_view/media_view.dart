@@ -30,7 +30,7 @@ class _MediaViewState extends State<MediaView> {
   @override
   Widget build(BuildContext context) {
     if (widget.post.video != null) {
-      String url = widget.post.video!.url;
+      String url = widget.post.video!.url!;
 
       return Padding(
         padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
@@ -87,7 +87,7 @@ class _MediaViewState extends State<MediaView> {
           return Builder(
             builder: (BuildContext context) {
               return ImagePreview(
-                url: media.url,
+                url: media.url!,
                 width: media.width!,
                 height: media.height!,
                 nsfw: false,
@@ -102,7 +102,7 @@ class _MediaViewState extends State<MediaView> {
     // Display a preview of the image if available.
     if (widget.post.image != null) {
       return ImagePreview(
-        url: widget.post.image!.url,
+        url: widget.post.image!.url!,
         height: widget.post.image!.height!,
         width: widget.post.image!.width!,
         nsfw: false,
@@ -111,7 +111,12 @@ class _MediaViewState extends State<MediaView> {
 
     // For any links that are considered to be external, generate a card for them
     if (widget.post.externalLink != null) {
-      return LinkPreviewCard(originURL: widget.post.externalLink!.url);
+      return LinkPreviewCard(
+        originURL: widget.post.externalLink!.originalURL,
+        mediaURL: widget.post.externalLink?.url,
+        mediaHeight: widget.post.externalLink?.height,
+        mediaWidth: widget.post.externalLink?.width,
+      );
     }
 
     return Container();
