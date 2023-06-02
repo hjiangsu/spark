@@ -70,6 +70,7 @@ class _FeedPageState extends State<FeedPage> {
       child: BlocBuilder<FeedBloc, FeedState>(
         builder: (context, state) {
           context.read<SparkBloc>().add(FeedContextChanged(feedContext: context));
+          context.read<SparkBloc>().add(RateLimitChanged(rateLimitUsage: RedditClient.instance.rateLimit.remaining));
 
           return Scaffold(
             appBar: AppBar(

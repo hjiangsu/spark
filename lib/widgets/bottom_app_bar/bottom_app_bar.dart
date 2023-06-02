@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:spark/core/singletons/reddit_client.dart';
+import 'package:spark/core/spark/spark.dart';
 
 class ActionBar extends StatefulWidget {
   const ActionBar({super.key});
@@ -58,18 +61,25 @@ class _ActionBarState extends State<ActionBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
-      child: Row(
-        children: bottomAppBarItems.asMap().entries.map((entry) {
-          int index = entry.key;
-          BottomAppBarItem item = entry.value;
+    Widget bottomAppBarWidgets = Row(
+      children: bottomAppBarItems.asMap().entries.map((entry) {
+        int index = entry.key;
+        BottomAppBarItem item = entry.value;
 
-          return IconButton(
-            icon: item.icon,
-            onPressed: () => _onItemTapped(context, index),
-          );
-        }).toList(),
-      ),
+        return IconButton(
+          icon: item.icon,
+          onPressed: () => _onItemTapped(context, index),
+        );
+      }).toList(),
+    );
+
+    return BottomAppBar(
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        bottomAppBarWidgets,
+        BlocBuilder<SparkBloc, SparkState>(builder: (context, state) {
+          return Text(context.read<SparkBloc>().state.rateLimitUsage.toString());
+        }),
+      ]),
     );
   }
 }

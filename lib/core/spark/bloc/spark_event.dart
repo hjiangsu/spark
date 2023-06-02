@@ -18,3 +18,9 @@ class FeedContextChanged extends SparkEvent {
 
   const FeedContextChanged({required this.feedContext});
 }
+
+class RateLimitChanged extends SparkEvent {
+  final int rateLimitUsage;
+
+  const RateLimitChanged({required this.rateLimitUsage});
+}

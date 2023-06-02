@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:spark/comment/comment.dart';
+import 'package:spark/core/spark/bloc/spark_bloc.dart';
 
 import 'package:spark/feed/widgets/post_heading.dart';
 import 'package:spark/post/bloc/post_bloc.dart';
@@ -49,6 +50,8 @@ class _PostPageState extends State<PostPage> {
     return BlocProvider<PostBloc>(
         create: (context) => PostBloc(reddit: RedditClient.instance),
         child: BlocBuilder<PostBloc, PostState>(builder: (context, state) {
+          context.read<SparkBloc>().add(RateLimitChanged(rateLimitUsage: RedditClient.instance.rateLimit.remaining));
+
           switch (state.status) {
             case PostStatus.initial:
               context.read<PostBloc>().add(PostRefreshed(postId: widget.postId));
@@ -71,6 +74,7 @@ class _PostPageState extends State<PostPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             PostHeading(post: state.post!),
+                            const SizedBox(height: 8.0),
                             MediaView(
                               post: state.post!,
                               showVideoControls: true,

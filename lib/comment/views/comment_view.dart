@@ -8,6 +8,7 @@ import 'package:spark/comment/bloc/comment_bloc.dart';
 import 'package:spark/comment/widgets/comment_card.dart';
 import 'package:spark/comment/widgets/comment_card_more_replies.dart';
 import 'package:spark/core/singletons/reddit_client.dart';
+import 'package:spark/core/spark/bloc/spark_bloc.dart';
 import 'package:spark/widgets/error_message/error_message.dart';
 
 class CommentView extends StatelessWidget {
@@ -24,6 +25,8 @@ class CommentView extends StatelessWidget {
     return BlocProvider<CommentBloc>(
       create: (context) => CommentBloc(reddit: RedditClient.instance),
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
+        context.read<SparkBloc>().add(RateLimitChanged(rateLimitUsage: RedditClient.instance.rateLimit.remaining));
+
         switch (state.status) {
           case CommentStatus.initial:
             context.read<CommentBloc>().add(CommentRefreshed(submissionId: submissionId, subreddit: subreddit, commentId: commentId));

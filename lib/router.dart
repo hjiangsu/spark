@@ -45,6 +45,14 @@ final GoRouter router = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     return PostPage(postId: state.pathParameters['id']!);
                   },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'image',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return ImageViewer(url: (state.extra as Map)['url']!);
+                      },
+                    ),
+                  ],
                 ),
                 GoRoute(
                   path: 'image',
@@ -55,11 +63,18 @@ final GoRouter router = GoRouter(
               ],
             ),
             GoRoute(
-              path: 'post/:id',
-              builder: (BuildContext context, GoRouterState state) {
-                return PostPage(postId: state.pathParameters['id']!);
-              },
-            ),
+                path: 'post/:id',
+                builder: (BuildContext context, GoRouterState state) {
+                  return PostPage(postId: state.pathParameters['id']!);
+                },
+                routes: <RouteBase>[
+                  GoRoute(
+                    path: 'image',
+                    builder: (BuildContext context, GoRouterState state) {
+                      return ImageViewer(url: (state.extra as Map)['url']!);
+                    },
+                  ),
+                ]),
             GoRoute(
               path: 'redditor/:id',
               builder: (BuildContext context, GoRouterState state) {
@@ -67,9 +82,22 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                  path: 'post/:id',
+                    path: 'post/:id',
+                    builder: (BuildContext context, GoRouterState state) {
+                      return PostPage(postId: state.pathParameters['id']!);
+                    },
+                    routes: <RouteBase>[
+                      GoRoute(
+                        path: 'image',
+                        builder: (BuildContext context, GoRouterState state) {
+                          return ImageViewer(url: (state.extra as Map)['url']!);
+                        },
+                      ),
+                    ]),
+                GoRoute(
+                  path: 'image',
                   builder: (BuildContext context, GoRouterState state) {
-                    return PostPage(postId: state.pathParameters['id']!);
+                    return ImageViewer(url: (state.extra as Map)['url']!);
                   },
                 ),
               ],
@@ -93,11 +121,25 @@ final GoRouter router = GoRouter(
               },
               routes: <RouteBase>[
                 GoRoute(
-                    path: 'post/:id',
-                    builder: (BuildContext context, GoRouterState state) {
-                      return PostPage(postId: state.pathParameters['id']!);
-                    },
-                    routes: const <RouteBase>[]),
+                  path: 'post/:id',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return PostPage(postId: state.pathParameters['id']!);
+                  },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'image',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return ImageViewer(url: (state.extra as Map)['url']!);
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  path: 'image',
+                  builder: (BuildContext context, GoRouterState state) {
+                    return ImageViewer(url: (state.extra as Map)['url']!);
+                  },
+                ),
               ],
             ),
             GoRoute(
@@ -112,7 +154,20 @@ final GoRouter router = GoRouter(
                   builder: (BuildContext context, GoRouterState state) {
                     return PostPage(postId: state.pathParameters['id']!);
                   },
-                  routes: const <RouteBase>[],
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: 'image',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return ImageViewer(url: (state.extra as Map)['url']!);
+                      },
+                    ),
+                    GoRoute(
+                      path: 'image',
+                      builder: (BuildContext context, GoRouterState state) {
+                        return ImageViewer(url: (state.extra as Map)['url']!);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
