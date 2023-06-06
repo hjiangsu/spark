@@ -18,6 +18,7 @@ class CustomMediaExtension {
   }
 
   Future<List<Media>> getMediaInformation(String url) async {
+    if (customMediaExtensionBaseURL == null) return [];
     List<Media> mediaList = [];
 
     Map<String, dynamic> response = await getMediaResponse(url: url);

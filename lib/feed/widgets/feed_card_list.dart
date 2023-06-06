@@ -36,9 +36,13 @@ class _FeedCardListState extends State<FeedCardList> {
 
   @override
   void dispose() {
-    context.read<SparkBloc>().add(const FeedScrollControllerChanged(scrollController: null));
+    try {
+      context.read<SparkBloc>().add(const FeedScrollControllerChanged(scrollController: null));
+      _scrollController.dispose();
+    } catch (e) {
+      print('Unable to dispose on Feed Card List');
+    }
 
-    _scrollController.dispose();
     super.dispose();
   }
 

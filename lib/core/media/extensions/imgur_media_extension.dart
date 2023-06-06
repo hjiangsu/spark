@@ -24,9 +24,8 @@ abstract class ImgurMediaExtension {
     List<Media> mediaList = [];
     MediaType mediaType;
 
-    Imgur imgur = ImgurClient.instance;
-
     try {
+      Imgur imgur = ImgurClient.instance;
       ImgurImage image = await imgur.image(url: url);
 
       String type = image.information!["type"];

@@ -89,7 +89,7 @@ class LinkPreviewCard extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          originURL!,
+                          originURL ?? '',
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodyMedium!.copyWith(
                             color: Colors.white60,
