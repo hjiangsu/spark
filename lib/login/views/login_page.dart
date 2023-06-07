@@ -24,17 +24,17 @@ class _LoginPageState extends State<LoginPage> {
     _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (String url) {
-            if (url.startsWith("${dotenv.get('REDDIT_CLIENT_CALLBACK_URL')}/auth")) {
-              Navigator.maybePop(context);
-            }
-          },
-        ),
-      )
+      // ..setNavigationDelegate(
+      //   NavigationDelegate(
+      //     onPageFinished: (String url) {
+      //       if (url.startsWith("${dotenv.get('REDDIT_CLIENT_CALLBACK_URL')}/auth")) {
+      //         Navigator.maybePop(context);
+      //       }
+      //     },
+      //   ),
+      // )
       ..loadRequest(Uri.parse(
-          "https://www.reddit.com/api/v1/authorize.compact?client_id=${dotenv.get('REDDIT_CLIENT_ID')}&response_type=code&state=$userUuid&redirect_uri=${dotenv.get('REDDIT_CLIENT_CALLBACK_URL')}/auth&duration=permanent&scope=*"));
+          "https://reddit.com/api/v1/authorize.compact?client_id=${dotenv.get('REDDIT_CLIENT_ID')}&response_type=code&state=$userUuid&redirect_uri=${dotenv.get('REDDIT_CLIENT_CALLBACK_URL')}&duration=permanent&scope=*"));
 
     if (_controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);

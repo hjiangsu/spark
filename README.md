@@ -45,24 +45,26 @@
 
 ## Features
 
-Spark is still under **development**, and all features may not be present yet. The following features are currently implemented.
+Spark is currently undergoing **active development**, and it is possible that not all features have been fully implemented at this stage. Due to this, significant breaking changes may occur between versions. The next section summarizes the features that are currently implemented.
 
-#### **Subreddits & Feeds**
+#### **Subreddits & Front Pages**
 
-- Browse front pages including _r/popular_ and _r/all_
-- Ability to sort feeds and subreddits by **best**, **hot**, **new**, and **rising**
-- Ability to search for a specific subreddit
+- Browse front pages including **r/popular**, and **r/all**
+- Browse individual subreddits through the Search function
+- Browse your subscriptions when logged in through Reddit's OAuth
+- Sort front pages and subreddits by **best**, **hot**, **new**, and **rising** categories
 
 #### **Posts**
 
-- Browse post and view associated comments
-- Upvote, downvote, and save posts (if logged in via OAuth)
+- Browse posts and view associated comments
+- Upvote, downvote, and save posts when logged in through Reddit's OAuth
 - Video autoplay when scrolling into view
+- Link previews for external URLs when available
 
 #### **Authentication**
 
-- Ability to authenticate via OAuth through Reddit
-- View subscribed subreddits
+- Authenticate to Reddit via OAuth without the need for a dedicated server
+- View and browse subscribed subreddits
 
 #### **Theme & Customization**
 
@@ -73,9 +75,9 @@ Spark is still under **development**, and all features may not be present yet. T
 
 Currently, work is in progress to add in more support for user actions when logged in. Some features on the roadmap are listed below.
 
-- Improved native support for external links and media
-  - Reddit and Imgur media are currently supported
-- See post awards
+- Improvements to comments section, and allowing the ability to perform actions on a comment (upvote, downvote, save, etc.)
+- More improved native support for external links and media. Currently, Reddit and Imgur media are supported natively, with initial support for external link previews
+- Improved customization and theming (compact view for posts, better theming options)
 - Increased native platform support for Windows, MacOS, and Linux
 
 ## Contributing
@@ -89,28 +91,24 @@ Contributions are always welcome! To contribute potential features or bug-fixes:
 ## Building From Source
 There are a few pre-requisites in order to build and run the application locally. Spark relies on a few external APIs and libraries to work. Thus, it is a requirement to set those up in order to develop with Spark.
 
-### Create Environment File
-Spark uses `.env` to store secrets, including credentials for API access. This is an example of a minimal `.env` file.
+### Create an Environment File
+Spark uses `.env` to store secrets, including credentials for API access. This is an example of a minimal `.env` file. The Reddit credentials are the only variables that are required to run the application. However, including other API credentials will improve the overall experience while using Spark.
 
-**Reddit**: to obtain your own Reddit API credentials, see the following [link](https://github.com/reddit-archive/reddit/wiki/OAuth2).  
-**PubNub**: to obtain your own PubNub keys, see the following [link](https://www.pubnub.com/docs/general/setup/account-setup).  
-**Imgur**: to set up your own Imgur API credentials, see the following [link](https://api.imgur.com/oauth2/addclient).  
-**Sentry**: to set up Sentry, see the following [link](https://docs.sentry.io/platforms/flutter/#configure).
+**Important Note**: When creating Reddit credentials, ensure that the callback URL is set to `"http://localhost:8080"`. This is because Spark uses an internal server to handle OAuth authorizations through this URL.
 
 ```dart
-// Reddit specific information required to identify application
+// [REQUIRED] Reddit specific information required to identify application
+// For information on obtaining Reddit API credentials, visit "https://github.com/reddit-archive/reddit/wiki/OAuth2"
 REDDIT_CLIENT_ID = ""
 REDDIT_CLIENT_USER_AGENT = ""
-REDDIT_CLIENT_CALLBACK_URL = ""
+REDDIT_CLIENT_CALLBACK_URL = "http://localhost:8080"
 
-// PubNub is used for pushing OAuth status
-PUBNUB_SUBSCRIBE_KEY = ""
-PUBNUB_PUBLISH_KEY = ""
-
-// Imgur client ID is required in order to use the Imgur API
+// [OPTIONAL] Imgur client ID is required in order to use the Imgur API
+// For information on obtaining Imgur API credentials, visit "https://api.imgur.com/oauth2/addclient"
 IMGUR_CLIENT_ID = ""
 
-// Sentry is used for error logging and debugging
+// [OPTIONAL] Sentry is used for error logging and debugging
+// For information on obtaining Sentry credentials, visit "https://docs.sentry.io/platforms/flutter/#configure"
 SENTRY_DSN = ""
 ```
 
@@ -142,5 +140,4 @@ Spark uses the following packages and libraries under the hood. This is not an e
 [imgur-dart](https://github.com/hjiangsu/imgur-dart) - custom-built Imgur library built in Dart
 
 ### Other
-[pubnub](https://pub.dev/packages/pubnub) - used to push OAuth credentials after user authentication  
 [sentry](https://pub.dev/packages/sentry) - used for logging error and debug information

@@ -60,8 +60,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       // Re-authenticate with user token if provided
       if (decodedAuthorizationMap != null) {
-        await reddit.authorization?.reauthorize(refreshCredentials: decodedAuthorizationMap);
-
         int now = DateTime.now().millisecondsSinceEpoch;
         int expiration = decodedAuthorizationMap['expires_at_ms'];
 
