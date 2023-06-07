@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spark/core/utils/link.dart';
+
 import 'package:spark/widgets/image_preview/image_preview.dart';
 
 import 'package:url_launcher/url_launcher.dart';

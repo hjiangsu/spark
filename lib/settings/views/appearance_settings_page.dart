@@ -31,6 +31,9 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
 
   double _fontSize = 250;
 
+  // Post options
+  bool showPostTitleOnTop = false;
+
   void setPreferences(attribute, value) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -51,6 +54,11 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
         setState(() => _fontSize = value);
         context.read<ThemeBloc>().add(ThemeRefreshed());
         break;
+      case 'showPostTitleOnTop':
+        bool showPostTitleOnTop = prefs.getBool('showPostTitleOnTop') ?? true;
+        await prefs.setBool('showPostTitleOnTop', !showPostTitleOnTop);
+        context.read<ThemeBloc>().add(ThemeRefreshed());
+        break;
     }
   }
 
@@ -61,6 +69,7 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
       useDarkTheme = prefs.getBool('useDarkTheme') ?? true;
       _colorScheme = prefs.getString('colorScheme') ?? "blueGrey";
       _fontSize = prefs.getDouble('fontSize') ?? 250;
+      showPostTitleOnTop = prefs.getBool('showPostTitleOnTop') ?? false;
       isLoading = false;
     });
   }
@@ -268,6 +277,36 @@ class _AppearanceSettingsPageState extends State<AppearanceSettingsPage> {
               label: (_fontSize.round() / 250).toString(),
               onChanged: (double value) => setState(() => _fontSize = value),
               onChangeEnd: (double value) => setPreferences('fontSize', value),
+            ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            'Posts',
+            style: theme.textTheme.titleLarge,
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                // Icon(showPostTitleOnTop ? Icons.play_arrow_rounded : Icons.play_disabled_rounded),
+                // const SizedBox(width: 8.0),
+                Text(
+                  'Show title on top',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            Switch(
+              value: showPostTitleOnTop,
+              onChanged: (bool value) {
+                HapticFeedback.lightImpact();
+                setPreferences('showPostTitleOnTop', value);
+                setState(() => showPostTitleOnTop = !showPostTitleOnTop);
+              },
             ),
           ],
         ),

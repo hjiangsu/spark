@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:spark/core/models/reddit_submission/reddit_submission.dart';
 import 'package:spark/core/utils/datetime.dart';
@@ -31,8 +32,21 @@ class _FeedCardState extends State<FeedCard> {
 
   List<Text> labelList = const <Text>[Text('Upvote'), Text('Downvote'), Text('Save')];
 
+  // Preferences
+  bool showPostTitleOnTop = false;
+
+  void _initPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      showPostTitleOnTop = prefs.getBool('showPostTitleOnTop') ?? false;
+    });
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initPreferences());
+
     super.initState();
   }
 
@@ -148,12 +162,19 @@ class _FeedCardState extends State<FeedCard> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (showPostTitleOnTop == true)
+                  Text(
+                    HtmlUnescape().convert(widget.post.title),
+                    style: theme.textTheme.titleMedium,
+                    softWrap: true,
+                  ),
                 MediaView(post: widget.post),
-                Text(
-                  HtmlUnescape().convert(widget.post.title),
-                  style: theme.textTheme.titleMedium,
-                  softWrap: true,
-                ),
+                if (showPostTitleOnTop == false)
+                  Text(
+                    HtmlUnescape().convert(widget.post.title),
+                    style: theme.textTheme.titleMedium,
+                    softWrap: true,
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0, bottom: 4.0),
                   child: Row(

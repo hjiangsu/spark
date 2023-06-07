@@ -33,7 +33,7 @@ class _MediaViewState extends State<MediaView> {
       String url = widget.post.video!.url!;
 
       return Padding(
-        padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
         child: Container(
           constraints: BoxConstraints(maxHeight: widget.post.video?.height ?? 300, maxWidth: widget.post.video?.width ?? 200),
           child: ClipRRect(
@@ -43,7 +43,7 @@ class _MediaViewState extends State<MediaView> {
               onVisibilityChanged: (visibilityInfo) {
                 double visiblePercentage = visibilityInfo.visibleFraction * 100;
 
-                if (visiblePercentage > 80) {
+                if (visiblePercentage > 10) {
                   videoController?.play();
                 } else {
                   videoController?.pause();

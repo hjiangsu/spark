@@ -42,6 +42,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
   double endBlur = 15;
   double startBlur = 0;
 
+  double volume = 0;
+
   @override
   void initState() {
     super.initState();
@@ -94,7 +96,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         ),
       ),
     );
-    _chewie?.setVolume(0.0);
+    _chewie?.setVolume(volume);
     widget.onVideoInitialized!(_controller!);
     // if (widget.onVideoInitialized != null && _controller != null) {
     //   widget.onVideoInitialized!(_controller!);
@@ -122,22 +124,30 @@ class _VideoPlayerState extends State<VideoPlayer> {
           }
         },
         child: Stack(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.bottomRight,
           children: [
             Chewie(key: widget.key, controller: _chewie!),
-            TweenAnimationBuilder<double>(
-              tween: Tween<double>(begin: blur ? startBlur : endBlur, end: blur ? endBlur : startBlur),
-              duration: const Duration(milliseconds: 0),
-              builder: (_, value, child) {
-                return BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: value, sigmaY: value),
-                  child: child,
-                );
-              },
-              child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.white.withOpacity(0.5)),
+            if (widget.showControls == false)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10, right: 5),
+                child: CircleAvatar(
+                  backgroundColor: Colors.black45,
+                  child: IconButton(
+                    onPressed: () {
+                      if (_controller?.value.volume == 0) {
+                        _controller?.setVolume(1.0);
+                      } else {
+                        _controller?.setVolume(0.0);
+                      }
+                      setState(() {});
+                    },
+                    icon: Icon(
+                      _controller?.value.volume == 0 ? Icons.volume_off_rounded : Icons.volume_up_rounded,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
               ),
-            ),
             VideoProgressIndicator(
               _controller!,
               colors: VideoProgressColors(
